@@ -1,0 +1,195 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-primary">	🏢 Departments Management</h1>
+    <button type="button" class="btn btn-outline-info" (click)="openAddDepartmentPopup()">
+      <i class="bi bi-plus-circle me-2"></i>
+    </button>
+  </div>
+
+  <p>
+  <a class="styled-link" (click)="openShowDepartmentswithoutManagerPopup()">
+  <i class="bi bi-exclamation-circle me-1"></i> Check departments without a manager
+</a>
+</p>
+
+<!-- index.html -->
+
+<!-- Cas où la liste est vide -->
+  <tr *ngIf="DepartmentsList.length === 0">
+    <td colspan="6" class="text-muted fw-bold py-4">
+      <i class="bi bi-exclamation-circle me-2"></i>No departments found.
+    </td>
+  </tr>
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let dept of DepartmentsList | paginate: { itemsPerPage: 4, currentPage: p }">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <h5 class="card-title">{{ dept.departmentName }}</h5>
+            <p class="card-text">{{ dept.departmentDescription }}</p>
+            <p class="card-text">
+              <strong><i class="bi bi-people-fill me-1"></i>Capacity:</strong> {{ dept.departmentCapacity }}
+            </p>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button class="btn btn-outline-primary btn-sm" (click)="openUpdateDepartmentopup(dept)" title="Edit">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="DeleteDepartment(dept)" title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <pagination-controls class="myPagination" (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>
+
+<!-- Add Department Popup -->
+<div *ngIf="AddDepartmentPopup" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-center position-relative">
+      <h3 class="modal-title fw fs-2" style="color: rgb(0, 0, 0);"> 🏬 Add a new Department</h3>
+      </div>
+
+      <div class="modal-body">
+        <input type="text" [(ngModel)]="Department.departmentName" placeholder="Name" name="departmentName" class="form-control mb-2"/>
+
+<div *ngIf="!isDepartmentNameUnique(Department.departmentName) && Department.departmentName">
+  <small class="text-danger">Ce nom existe déjà.</small>
+</div>
+        <input [(ngModel)]="Department.departmentDescription" placeholder="Description" class="form-control mb-2">
+        <input type="number" [(ngModel)]="Department.departmentCapacity" placeholder="Capacity" class="form-control mb-2">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" (click)="AddDepartment(Department)">Save</button>
+        <button class="btn btn-secondary" (click)="closeAddDepartmentopup()">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Department Popup -->
+<div *ngIf="UpdateDepartmentPopup" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Department</h5>
+        <button type="button" class="btn-close" (click)="closeUpdateDepartmentPopup()"></button>
+      </div>
+      <div class="modal-body">
+        <input [(ngModel)]="Department.departmentName" placeholder="Name" class="form-control mb-2">
+        <input [(ngModel)]="Department.departmentDescription" placeholder="Description" class="form-control mb-2">
+        <input type="number" [(ngModel)]="Department.departmentCapacity" placeholder="Capacity" class="form-control mb-2">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="UpdateDepartment(Department)">Update</button>
+        <button class="btn btn-secondary" (click)="closeUpdateDepartmentPopup()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Show Departments without Manager Popup -->
+<div *ngIf="ShowDepartmentswithoutManagerPopup" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-light text-dark ">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i> Departments without a Manager
+        </h5>
+        <button type="button" class="btn-close" (click)="closeShowDepartmentswithoutManagerPopup()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="ListDepartmentWithNoManager.length > 0" class="row">
+          <div class="col-md-6 mb-3" *ngFor="let dept of ListDepartmentWithNoManager | paginate: { itemsPerPage: 4, currentPage: p1 }">
+            <div class="card border-warning shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title text-warning">
+                  <i class="bi bi-exclamation-circle me-2"></i>{{ dept.departmentName }}
+                </h5>
+                <p class="card-text text-muted mb-1">
+                  <i class="bi bi-card-text me-2"></i> {{ dept.departmentDescription || 'No description' }}
+                </p>
+                <p class="card-text">
+                  <i class="bi bi-people-fill me-2"></i>
+                  <strong>Capacity:</strong> {{ dept.departmentCapacity }}
+                </p>
+                <div class="d-flex justify-content-end">
+              </div>
+              <button class="btn btn-sm btn-outline-primary" (click)="openAssignManagerPopUp(dept)" >
+                <i class="bi bi-person-plus-fill me-1"></i>
+                </button>
+                </div>
+
+            </div>
+          </div>
+        </div>
+        <div *ngIf="ListDepartmentWithNoManager.length === 0" class="text-center text-success">
+          <i class="bi bi-check-circle-fill me-2"></i> All departments have a manager 🎉
+        </div>
+      </div>
+      <pagination-controls class="myPagination" (pageChange)="p1 = $event"></pagination-controls>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeShowDepartmentswithoutManagerPopup()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assign Manager Popup -->
+<div *ngIf="OpenAssignManagerPopup" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light text-dark">
+        <h5 class="modal-title">
+          <i class="bi bi-person-plus-fill me-2"></i> Assign Manager to Department
+        </h5>
+        <button type="button" class="btn-close" (click)="closeAssignManagerPopUp()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <p class="mb-3">Select an employee to assign as manager for the department:</p>
+        <div class="row">
+          <div class="col-md-6 mb-3" *ngFor="let employee of ListEmployeesByDepartment">
+            <div class="card border-warning shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title text-warning">
+                  <i class="bi bi-person-fill me-2"></i>{{ employee.firstname }} {{ employee.lastname }}
+                </h5>
+                <p class="card-text text-muted mb-1">
+                  <i class="bi bi-envelope me-2"></i>{{ employee.username }}
+                </p>
+                <div class="d-flex justify-content-end mt-3">
+                  <button class="btn btn-primary" type="submit" (click)="assignEmployeeAsManager(employee)">
+                  <i class="bi bi-person-plus-fill me-1"></i>
+                  </button>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeAssignManagerPopUp()">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- End of Open Employees by Department Popup -->
+

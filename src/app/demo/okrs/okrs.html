@@ -1,0 +1,195 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+  <div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-primary">📊 Key Indicators Management</h1>
+    <button type="button" class="btn btn-outline-info" (click)="openAddOkrPopup()">
+      <i class="bi bi-plus-circle me-2"></i>
+    </button>
+  </div>
+
+  <!-- Cas où la liste est vide -->
+  <tr *ngIf="OkrsList.length === 0">
+    <td colspan="6" class="text-muted fw-bold py-4">
+      <i class="bi bi-exclamation-circle me-2"></i> No Okr found!
+    </td>
+  </tr>
+  <div *ngFor="let okr of OkrsList | paginate: { itemsPerPage: 4, currentPage: p }" class="okr-item shadow-sm p-3 mb-3 rounded border">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+      <div>
+        <h5 class="mb-1 text-dark">{{ okr.keyindicatorTitle }}</h5>
+        <strong class="mb-1 text-muted">{{ okr.keyindicatorDescription }}</strong>
+
+        <p class="mb-1 text-muted"> <strong>Department :</strong> {{ okr.department?.departmentName }} </p>
+        <p class="mb-1 text-muted"> <strong>Objective :</strong> {{ okr.objective?.objectiveTitle }} </p>
+
+        <small class="text-muted"><strong>Target:</strong> {{ okr.targetValue }} | <strong>Reached:</strong> {{ okr.reachedValue }}
+        </small>
+      </div>
+
+      <div class="text-center">
+        <div class="mb-1">
+          <ng-container *ngFor="let i of [0,1,2,3,4]">
+            <i class="bi"
+              [ngClass]="getStarClass(i, okr.okrWeight)"
+              (click)="setWeight(okr, i + 1)"
+              style="cursor: pointer; font-size: 1.2rem;">
+            </i>
+          </ng-container>
+        </div>
+        <div class="progress" style="height: 12px; width: 150px;">
+          <div class="progress-bar"
+              [ngClass]="{
+                'bg-success': okr.okrProgression >= 75,
+                'bg-primary': okr.okrProgression >= 40 && okr.okrProgression < 75,
+                'bg-danger': okr.okrProgression < 40
+              }"
+              [style.width.%]="okr.okrProgression">
+          </div>
+        </div>
+        <small class="text-muted">{{ okr.okrProgression }}%</small>
+
+      </div>
+
+      <div class="mt-2 mt-md-0">
+        <button class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateOkrPopup(okr)">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-outline-danger btn-sm" (click)="DeleteOkr(okr)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+      <pagination-controls class="myPagination" (pageChange)="p = $event"></pagination-controls>
+</div>
+
+<!-- Form Add Okr Popu-up -->
+<div class="popup_overlay" *ngIf="AddOkrPopup">
+  <form class="form_container">
+    <div class="title_container">
+      <p class="title">Add a new Key Indicator !</p>
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="title_field">Title</label>
+      <input placeholder="Title" type="text" class="input_field" id="title_field" [(ngModel)]="Okr.keyindicatorTitle" name="title" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="description_field">Description</label>
+      <input placeholder="Description" type="text" class="input_field" id="description_field" [(ngModel)]="Okr.keyindicatorDescription" name="description" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="target_field">Target</label>
+      <input placeholder="Target" type="number" class="input_field" id="target_field" [(ngModel)]="Okr.targetValue" name="Target Value" />
+
+    <div class="input_container">
+      <label class="input_label" for="reached_field">Reached</label>
+      <input placeholder="Reached" type="number" class="input_field" id="reached_field" [(ngModel)]="Okr.reachedValue" name="Reached Value" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="weight_field">Weight</label>
+      <input placeholder="Weight" type="number" class="input_field" id="weight_field" [(ngModel)]="Okr.okrWeight" name="weight" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="progress_field">Progress</label>
+      <input placeholder="Progress" type="number" class="input_field" id="progress_field" [(ngModel)]="Okr.okrProgression" name="progress" />
+    </div>
+    <div>
+
+    <div><label class="form-label">Select Department</label>
+        <select class="form-select" [(ngModel)]="selecteddepartmentid" name="department" required>
+        <option *ngFor="let dept of DepartmentsWithoutOkr">{{ dept.departmentName }}</option>
+        </select>
+    </div>
+
+    <div><label class="form-label">Select Objective</label>
+        <select class="form-select" [(ngModel)]="selectedobjectiveid" name="objective" required>
+        <option *ngFor="let obj of ObjectivesList" [ngValue]="obj.id">{{ obj.objectiveTitle }}</option>
+        </select>
+    </div>
+
+
+    <button type="submit" class="sign-in_btn" (click)="AddOkr(Okr, selecteddepartmentid, selectedobjectiveid)">Add</button>
+    <button type="submit" class="sign-in_apl" (click)="closeAddOkrPopup()">Close</button>
+    <div class="separator">
+      <hr class="line" />
+      <hr class="line" />
+    </div>
+    <p class="note">Our Progress is made by you</p>
+</div>
+    </div>
+  </form>
+</div>
+<!-- end of Add Okr popup-form -->
+
+
+<!-- Form Update Okr Popu-up -->
+<div class="popup_overlay" *ngIf="UpdateOkrPopup">
+  <form class="form_container">
+    <div class="title_container">
+      <p class="title">Update the Indicator !</p>
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="title_field">Title</label>
+      <input placeholder="Title" type="text" class="input_field" id="title_field" [(ngModel)]="Okr.keyindicatorTitle" name="title" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="description_field">Description</label>
+      <input placeholder="Description" type="text" class="input_field" id="description_field" [(ngModel)]="Okr.keyindicatorDescription" name="description" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="target_field">Target</label>
+      <input placeholder="Target" type="number" class="input_field" id="target_field" [(ngModel)]="Okr.targetValue" name="Target Value" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="reached_field">Reached</label>
+      <input placeholder="Reached" type="number" class="input_field" id="reached_field" [(ngModel)]="Okr.reachedValue" name="Reached Value" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="weight_field">Weight</label>
+      <input placeholder="Weight" type="number" class="input_field" id="weight_field" [(ngModel)]="Okr.okrWeight" name="Weight" />
+    </div>
+
+    <div class="input_container">
+      <label class="input_label" for="progress_field">Progress</label>
+      <input placeholder="Progress" type="number" class="input_field" id="progress_field" [(ngModel)]="Okr.okrProgression" name="progress" />
+    </div>
+
+    <div><label class="form-label">Select Department</label>
+        <select class="form-select" [(ngModel)]="selecteddepartmentid" name="department" required>
+        <option *ngFor="let dept of DepartmentsList" [ngValue]="dept.id">{{ dept.departmentName }}</option>
+        </select>
+    </div>
+
+    <div><label class="form-label">Select Objective</label>
+        <select class="form-select" [(ngModel)]="selectedobjectiveid" name="objective" required>
+        <option *ngFor="let obj of ObjectivesList" [ngValue]="obj.id">{{ obj.objectiveTitle }}</option>
+        </select>
+    </div>
+
+
+
+
+
+    <button type="submit" class="sign-in_btn" (click)="UpdateOkr(Okr, selecteddepartmentid, selectedobjectiveid)">Update</button>
+    <button type="submit" class="sign-in_apl" (click)="closeUpdateOkrPopup()">Close</button>
+    <div class="separator">
+      <hr class="line"/>
+      <hr class="line"/>
+    </div>
+    <p class="note">Our Progress is made by you</p>
+  </form>
+</div>
+
+

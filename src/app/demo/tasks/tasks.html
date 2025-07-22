@@ -1,0 +1,240 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-primary fw-bold">📋 Task Manager</h1>
+    <button class="btn btn-success rounded-pill px-4" (click)="openAddTaskPopop()">
+      ➕
+    </button>
+  </div>
+  <!-- 🔍 Barre de recherche -->
+    <div class="input-group mb-4">
+    <span class="input-group-text bg-white border-end-0">
+      <i class="bi bi-search text-muted"></i>
+    </span>
+    <input
+      type="text"
+      class="form-control border-start-0"
+      placeholder="Search a Task ..."
+      [(ngModel)]="searchText"
+    />
+  </div>
+
+<!-- Zone des résultats -->
+<div *ngIf="searchText.trim() !== ''">
+  <!-- Si aucun résultat trouvé -->
+  <div *ngIf="filteredTasks(TasksList, searchText).length === 0" class="text-muted fst-italic mb-4">
+    🔍 Searched Task doesn't exist.
+  </div>
+
+  <!-- Sinon, afficher les tâches filtrées -->
+  <div *ngFor="let task of filteredTasks(TasksList, searchText)" class="mb-3 p-3 border rounded shadow-sm">
+    <h5 class="mb-1">{{ task.taskTitle }}</h5>
+    <p class="mb-0 text-muted">{{ task.taskDescription }}</p>
+    <button class="btn btn-outline-primary btn-sm mt-2" (click)="openUpdateTaskPopup(task)">✏️</button>
+    <button class="btn btn-outline-danger btn-sm mt-2" (click)="DeleteTask(task)">🗑️</button>
+  </div>
+</div>
+
+
+
+
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle shadow-sm">
+      <thead class="table-light text-center">
+        <tr *ngIf="searchText.trim() === '' && TasksList.length > 0; else noTasksOrSearch">
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>StartValue</th>
+          <th>DoneValue</th>
+          <th>Weight</th>
+          <th>Related OKR</th>
+          <th>Assigned User</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="searchText.trim() === '' && TasksList.length > 0; else noTasksOrSearch ">
+
+
+        <tr *ngFor="let task of TasksList | paginate: { itemsPerPage: 4, currentPage: p }; let i = index">
+
+          <td>{{ task.taskTitle }}</td>
+          <td>{{ task.taskDescription }}</td>
+          <td class="text-center">
+            <span
+            class="badge"
+            [ngClass]="{
+            'bg-success': task.taskState === 'REACHED',
+            'bg-danger': task.taskState === 'UNREACHED',
+            'bg-info': task.taskState === 'INPROGRESS'}">
+            {{ task.taskState === 'REACHED' ? 'Reached' : task.taskState === 'UNREACHED' ? 'UNREACHED' : 'INPROGRESS' }}
+            </span>
+          </td>
+
+          <td>{{ task.taskStartValue }}</td>
+          <td>{{ task.taskDoneValue }}</td>
+
+          <td class="text-center">
+            <div class="d-flex justify-content-center align-items-center gap-1">
+              <ng-container *ngFor="let i of [0,1,2,3,4]">
+                <i class="bi"
+                  [ngClass]="getStarClass(i, task.taskWeight)"
+                  (click)="setWeight(task, i + 1)"
+                  style="cursor: pointer; font-size: 1.2rem;">
+                </i>
+              </ng-container>
+            </div>
+          </td>
+
+          <td>
+            {{ task.okr?.keyindicatorTitle || 'N/A' }}
+          </td>
+          <td>
+            {{ task.user?.username || 'N/A' }}
+          </td>
+
+
+          <td class="text-center">
+            <button class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateTaskPopup(task)">✏️</button>
+            <button class="btn btn-outline-danger btn-sm" (click)="DeleteTask(task)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noTasks>
+      <tr>
+        <td colspan="7" class="text-center text-muted">No tasks found.</td>
+      </tr>
+    </ng-template>
+  </div>
+
+  <div class="d-flex justify-content-center mt-3">
+    <pagination-controls (pageChange)="p = $event" class="myPagination"></pagination-controls>
+  </div>
+</div>
+
+<!-- Add Task Modal -->
+<div *ngIf="AddTaskPopup" class="modal d-block fade show" tabindex="-1" style="background: rgba(0, 0, 0, 0.4);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-light text-dark position-relative justify-content-center">
+  <h3 class="modal-title m-0 fw-bold fs-3">➕ Add New Task</h3>
+</div>
+      <div class="modal-body">
+        <form (ngSubmit)="AddTask(Task, selectedokrid, selecteduserid)">
+          <div class="mb-3">
+            <label>Title</label>
+            <input type="text" class="form-control" [(ngModel)]="Task.taskTitle" name="taskTitle" required>
+          </div>
+          <div class="mb-3">
+            <label>Description</label>
+            <textarea class="form-control" [(ngModel)]="Task.taskDescription" name="taskDescription"></textarea>
+          </div>
+          <div class="mb-3">
+            <label>Status</label>
+            <select class="form-select" [(ngModel)]="Task.taskState" name="taskState">
+              <option value="UNREACHED">UNREACHED</option>
+              <option value="INPROGRESS">InProgress</option>
+              <option value="REACHED">REACHED</option>
+            </select>
+          </div>
+          <div class="mb-3 d-flex gap-3">
+            <div>
+              <label>Start Value</label>
+              <input type="number" class="form-control" [(ngModel)]="Task.taskStartValue" name="taskStartValue" min="0" max="100">
+            </div>
+            <div>
+              <label>Done Value</label>
+              <input type="number" class="form-control" [(ngModel)]="Task.taskDoneValue" name="taskDoneValue" min="0" max="100">
+            </div>
+            <div>
+              <label>Weight</label>
+              <input type="number" class="form-control" [(ngModel)]="Task.taskWeight" name="taskWeight">
+            </div>
+          </div>
+          <div>
+              <label>Select your OKR</label>
+              <select class="form-select" [(ngModel)]="selectedokrid" name="okr" required>
+                <option *ngFor="let okr of OkrsList" [ngValue]="okr.id">{{ okr.keyindicatorTitle }}</option>
+              </select>
+            </div>
+            <div>
+              <label>Assign the Task to </label>
+              <select class="form-select" [(ngModel)]="selecteduserid" name="user" required>
+                <option *ngFor="let user of UsersList" [ngValue]="user.id">{{ user.username }}</option>
+              </select>
+            </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="closeAddTaskPopop()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Task Modal -->
+<div *ngIf="UpdateTaskPopup" class="modal d-block fade show" tabindex="-1" style="background: rgba(0, 0, 0, 0.4);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">✏️ Edit Task</h5>
+        <button type="button" class="btn-close" (click)="closeUpdateTaskPopup()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="UpdateTask(Task, selectedokrid, selecteduserid)">
+          <div class="mb-3">
+            <label>Title</label>
+            <input type="text" class="form-control" [(ngModel)]="Task.taskTitle" name="editTitle" required>
+          </div>
+          <div class="mb-3">
+            <label>Description</label>
+            <textarea class="form-control" [(ngModel)]="Task.taskDescription" name="editDescription"></textarea>
+          </div>
+          <div class="mb-3">
+            <label>Status</label>
+            <select class="form-select" [(ngModel)]="Task.taskState" name="editState">
+              <option value="UNREACHED">UNREACHED</option>
+              <option value="INPROGRESS">INPROGRESS</option>
+              <option value="REACHED">REACHED</option>
+            </select>
+          </div>
+          <div class="mb-3 d-flex gap-3">
+            <div>
+              <label>Start </label>
+              <input type="number" class="form-control" [(ngModel)]="Task.taskStartValue" name="editStart" min="0" max="100">
+            </div>
+            <div>
+              <label>Done </label>
+              <input type="number" class="form-control" [(ngModel)]="Task.taskDoneValue" name="editDone" min="0" max="100">
+            </div>
+            <div>
+              <label>Weight</label>
+              <input type="number" class="form-control" [(ngModel)]="Task.taskWeight" name="editWeight">
+            </div>
+          </div>
+          <div>
+              <label>Select your OKR</label>
+              <select class="form-select" [(ngModel)]="selectedokrid" name="editOkr" required>
+                <option *ngFor="let okr of OkrsList" [ngValue]="okr.id">{{ okr.keyindicatorTitle }}</option>
+              </select>
+            </div>
+            <div>
+              <label>Assign the Task to </label>
+              <select class="form-select" [(ngModel)]="selecteduserid" name="editUser" required>
+                <option *ngFor="let user of UsersList" [ngValue]="user.id">{{ user.username }}</option>
+              </select>
+            </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-secondary" (click)="closeUpdateTaskPopup()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

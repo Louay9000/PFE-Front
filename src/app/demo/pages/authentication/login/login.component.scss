@@ -1,0 +1,124 @@
+/* ====== GLOBAL STYLES ====== */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #e0f2f1, #e3f2fd);
+}
+
+/* ====== AUTH MAIN WRAPPER ====== */
+.auth-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.auth-wrapper.v3 {
+  width: 100%;
+  max-width: 500px;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* ====== CARD WITH GLASS EFFECT ====== */
+.card {
+  border: none;
+  border-radius: 20px;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s ease;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+/* ====== IMAGE STYLING ====== */
+.card img {
+  max-width: 50%;
+  height: auto;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.card img:hover {
+  transform: scale(1.05);
+}
+
+/* ====== TITLES & TEXT ====== */
+h4.text-info-emphasis {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  color: #0d47a1;
+}
+
+.auth-header p.fs-4 {
+  color: #1e88e5;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+/* ====== INPUT FIELDS ====== */
+.form-floating .form-control {
+  border-radius: 10px;
+  border: 1px solid #90caf9;
+}
+
+.form-floating label {
+  color: #546e7a;
+}
+
+/* ====== BUTTONS ====== */
+.btn-primary {
+  background-color: #1976d2;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 0;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #1565c0;
+}
+
+/* ====== FORGOT PASSWORD ====== */
+h5.text-secondary a {
+  color: #546e7a;
+  text-decoration: none;
+}
+
+h5.text-secondary a:hover {
+  text-decoration: underline;
+}
+
+/* ====== MODAL CUSTOMIZATION ====== */
+.modal-header.bg-danger {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.modal-body {
+  font-weight: 500;
+  color: #c62828;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 576px) {
+  .auth-wrapper.v3 {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  h4.text-info-emphasis {
+    font-size: 1rem;
+  }
+
+  .card img {
+    width: 80%;
+  }
+}

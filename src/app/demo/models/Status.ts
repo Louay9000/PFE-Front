@@ -1,0 +1,5 @@
+export enum Status {
+  REACHED = 'REACHED',
+  UNREACHED = 'UNREACHED',
+  INPROGRESS = 'INPROGRESS',
+}

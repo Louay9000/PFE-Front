@@ -1,0 +1,227 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="text-primary">👤 Users Management</h1>
+
+    <button class="btn btn-success" (click)="openAddUserPopup()">
+      <i class="bi bi-person-plus"></i>
+    </button>
+  </div>
+
+
+
+
+  <div class="container mt-4">
+  <div class="row">
+    <div
+      class="col-md-6 col-lg-4 mb-4"
+      *ngFor="let user of UsersList | paginate: { itemsPerPage: 3, currentPage: p }"
+    >
+      <div class="profile-card">
+        <!-- Photo de profil (initiales avec SVG cercle) -->
+        <div class="profile-image">
+          <svg
+            width="70"
+            height="70"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="50" cy="50" r="48" fill="#7fcef2" />
+            <text
+              x="50%"
+              y="55%"
+              text-anchor="middle"
+              font-size="32"
+              fill="white"
+              font-family="Arial, sans-serif"
+              dominant-baseline="middle"
+            >
+              {{ user.firstname[0] }}{{ user.lastname[0] }}
+            </text>
+          </svg>
+        </div>
+
+        <!-- Informations utilisateur -->
+        <div class="profile-info">
+          <p class="profile-name">{{ user.firstname }} {{ user.lastname }}</p>
+          <div class="profile-title">{{ user.username }}</div>
+          <div class="profile-bio">
+            <div><strong>Role:</strong> {{ user.role }}</div>
+            <div>
+              <strong>Department:</strong>
+              {{ user.department?.departmentName || 'N/A' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="social-links">
+          <button
+            class="social-btn"
+            title="Edit"
+            (click)="openUpdateUseropup(user)"
+          >
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button
+            class="social-btn"
+            title="Delete"
+            (click)="deleteUser(user)">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+
+          <button
+            class="social-btn"
+            title="View"
+            (click)="getTasksByUserId(user.id)"
+          >
+            <i class="bi bi-eye-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-center mt-4">
+    <pagination-controls
+      class="myPagination"
+      (pageChange)="p = $event"
+    ></pagination-controls>
+  </div>
+</div>
+
+  <!-- Add User Popup -->
+<div *ngIf="AddUserPopup" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title text-center fw w-100 fs-2" style="color: rgb(0, 0, 0);">🙍‍♂️ Add a new Employee</h3>
+        <button type="button" class="btn-close" (click)="closeAddUserPopup()"></button>
+      </div>
+      <div class="modal-body">
+
+        <div *ngIf="!isUsernameUnique(User.username) && User.username">
+  <small class="text-danger">Ce Username existe déjà.</small>
+</div>
+        <input [(ngModel)]="User.firstname" placeholder="Name" class="form-control mb-2">
+        <input [(ngModel)]="User.lastname" placeholder="Lastname" class="form-control mb-2">
+        <input [(ngModel)]="User.username" placeholder="Username" class="form-control mb-2">
+        <input type="password" [(ngModel)]="User.password" placeholder="Password" class="form-control mb-2">
+
+        <label class="form-label">Select Role</label>
+
+        <select [(ngModel)]="User.role" class="form-select mb-2">
+          <option value="EMPLOYEE">EMPLOYEE</option>
+        </select>
+
+        <label class="form-label">Select Department</label>
+        <select class="form-select" [(ngModel)]="selecteddepartmentid" name="department" required>
+        <option *ngFor="let dept of ListDeparments" [ngValue]="dept.id">{{ dept.departmentName }}</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" (click)="AddUser(User,selecteddepartmentid)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update User Popup -->
+<div *ngIf="UpdateUserPopup" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update User</h5>
+        <button type="button" class="btn-close" (click)="closeUpdateUserPopup()"></button>
+      </div>
+      <div class="modal-body">
+
+        <input [(ngModel)]="User.firstname" placeholder="Name" class="form-control mb-2">
+        <input [(ngModel)]="User.lastname" placeholder="Lastname" class="form-control mb-2">
+        <input [(ngModel)]="User.username" placeholder="Username" class="form-control mb-2">
+
+        <select [(ngModel)]="User.role" class="form-select mb-2">
+          <option value="" disabled selected>Select Role</option>
+          <option value="MANAGER">MANAGER</option>
+          <option value="EMPLOYEE">EMPLOYEE</option>
+        </select>
+
+
+
+<select class="form-select" [(ngModel)]="User.department" name="department" required disabled
+        [compareWith]="compareDepartments">
+  <option *ngFor="let dept of ListDeparments" [ngValue]="dept">{{ dept.departmentName }}</option>
+</select>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="UpdateUser(User)">Update</button>
+        <button class="btn btn-secondary" (click)="closeUpdateUserPopup()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- open Check Up Tasks by UserId -->
+<div
+  class="modal fade show d-block"
+  *ngIf="CheckTasksByUserIdPopUp"
+  tabindex="-1"
+  style="background-color: rgba(0, 0, 0, 0.5);"
+>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content shadow-lg rounded-4 border-0">
+        <div class="modal-header bg-primary text-white rounded-top-4">
+          <h5 class="modal-title w-100 text-center">
+            📝User tasks
+          </h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="closeCheckTasksByUserIdPopUp()"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div *ngIf="TasksList.length === 0" class="text-center text-muted">
+          <p>User doesn't have any tasks.</p>
+        </div>
+
+        <div *ngIf="TasksList.length > 0" class="list-group">
+          <div
+            *ngFor="let task of TasksList"
+            class="list-group-item list-group-item-action flex-column align-items-start mb-2 rounded shadow-sm border-0"
+          >
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1 text-primary">{{ task.taskTitle }}</h5>
+              <small class="badge bg-info text-dark">
+                {{ task.taskState }}
+              </small>
+            </div>
+            <p class="mb-1 text-secondary">{{ task.taskDescription }}</p>
+            <div class="d-flex justify-content-between mt-2">
+              <small>📈 Début: {{ task.taskStartValue }}</small>
+              <small>✅ Fait: {{ task.taskDoneValue }}</small>
+              <small>⚖️ Poids: {{ task.taskWeight }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-end">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="closeCheckTasksByUserIdPopUp()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

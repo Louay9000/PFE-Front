@@ -1,0 +1,13 @@
+.myPagination ::ng-deep .ngx-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.myPagination ::ng-deep .ngx-pagination li {
+  margin: 0 4px;
+}
+
+.modal {
+  z-index: 1050;
+}
