@@ -1,0 +1,194 @@
+/* ==== GLOBAL ==== */
+body {
+  background: linear-gradient(135deg, #8e24aa, #d05ce3);
+  font-family: 'Poppins', sans-serif;
+  padding: 60px 0;
+  color: #333;
+}
+
+/* ==== CONTAINER ==== */
+.emp-profile {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  max-width: 1000px;
+  margin: auto;
+  transition: all 0.3s ease;
+}
+
+/* ==== IMAGE DE PROFIL ==== */
+.profile-img {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.profile-img img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid #8e24aa;
+  transition: transform 0.3s ease;
+}
+
+.profile-img img:hover {
+  transform: scale(1.05);
+}
+
+.profile-img .file {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #8e24aa;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.profile-img .file:hover {
+  background: #aa4edb;
+}
+
+/* ==== HEADERS ==== */
+.profile-head h5 {
+  color: #222;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.profile-head h6 {
+  color: #8e24aa;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+/* ==== TABS ==== */
+.nav-tabs {
+  margin-top: 30px;
+  border-bottom: none;
+  justify-content: center;
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  color: #555;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+  color: #8e24aa;
+  border-bottom: 3px solid #8e24aa;
+}
+
+/* ==== BUTTONS ==== */
+.profile-edit-btn,
+.btn-upload {
+  background-color: #8e24aa;
+  border: none;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-edit-btn:hover,
+.btn-upload:hover {
+  background-color: #aa4edb;
+}
+
+/* ==== INFOS PROFIL ==== */
+.profile-tab label {
+  font-weight: 600;
+  color: #444;
+}
+
+.profile-tab p {
+  color: #555;
+  margin-bottom: 12px;
+}
+
+/* ==== WORK LINKS ==== */
+.profile-work {
+  padding: 20px;
+  background-color: #fafafa;
+  border-radius: 15px;
+  margin-top: 20px;
+}
+
+.profile-work p {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.profile-work a {
+  display: block;
+  color: #8e24aa;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.profile-work a:hover {
+  color: #6a1b9a;
+  text-decoration: underline;
+}
+
+/* ==== RÉPONSIVE ==== */
+@media (max-width: 768px) {
+  .emp-profile {
+    padding: 20px;
+  }
+
+  .profile-img img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-head h5 {
+    font-size: 20px;
+  }
+
+}
+
+.loader-container {
+  position: fixed;        /* reste au centre même en scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7); /* optionnel: léger fond blanc transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* s'assure qu'il soit au-dessus de tout */
+}
+
+/* Exemple de loader simple */
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #8E24AA; /* Violet foncé */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+/* Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

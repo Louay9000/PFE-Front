@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Role } from 'src/app/demo/models/Role';
 import { User } from 'src/app/demo/models/User';
+import {Image} from 'src/app/demo/models/Image'
 import { Auth } from 'src/app/demo/services/auth';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -24,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrls: ['./login.component.scss']
 })
 export default class LoginComponent implements OnInit {
+image : Image = new Image();
 user: User ={
     id: 0,
     firstname: '',
@@ -31,7 +33,8 @@ user: User ={
     username: '',
     password: '',
     role: Role.ADMIN || Role.MANAGER || Role.EMPLOYEE,
-    department: null 
+    department: null,
+    image:null
   }
 
 

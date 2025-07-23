@@ -1,0 +1,68 @@
+<!-- Ajoute Bootstrap CSS si nécessaire -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container emp-profile mt-4 p-4 border rounded shadow-sm">
+  <form method="post">
+    <div class="row">
+      <!-- Colonne gauche : image -->
+      <div class="col-md-4 text-center">
+        <!-- Aperçu de l'image actuelle -->
+        <div *ngIf="getUserImage(myprofileuser) as img">
+          <img
+            *ngIf="!imageLoader"
+            [src]="img.imageUrl"
+            alt="Image profil utilisateur"
+            class="img-fluid rounded-circle mb-3"
+            style="width: 150px; height: 150px; object-fit: cover;"
+          />
+        </div>
+        <div class="loader-container" *ngIf="imageLoader">
+        <div class="loader"></div>
+        </div>
+        <div *ngIf="!getUserImage(myprofileuser)">
+          <p>No images found for this user.</p>
+        </div>
+
+        <!-- Sélection image -->
+        <input type="file" id="imageInput" (change)="onImageSelected($event)" hidden />
+        <button  class="btn-upload" type="button" (click)="triggerFileInput()" *ngIf="!selectedImageFile">select Image</button>
+
+        <!-- Upload image -->
+        <button  class="btn-upload mt-2" type="button" (click)="uploadUserImage()"  *ngIf="selectedImageFile && !imageLoader">Confirm</button>
+      </div>
+
+      <!-- Colonne droite : infos utilisateur -->
+      <div class="col-md-8">
+        <div class="profile-head">
+          <h5>{{ myprofileuser.firstname }} {{ myprofileuser.lastname }}</h5>
+          <h6 class="text-muted">{{ myprofileuser.role }}</h6>
+        </div>
+
+        <hr />
+
+        <div class="tab-content profile-tab" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row mb-2">
+              <div class="col-md-4 font-weight-bold">Firstname</div>
+              <div class="col-md-8">{{ myprofileuser.firstname }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-4 font-weight-bold">Lastname</div>
+              <div class="col-md-8">{{ myprofileuser.lastname }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-4 font-weight-bold">Username</div>
+              <div class="col-md-8">{{ myprofileuser.username }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-4 font-weight-bold">Department</div>
+              <div class="col-md-8">{{ departmentName }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+

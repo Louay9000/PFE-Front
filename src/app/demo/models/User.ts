@@ -1,4 +1,5 @@
 import { Department } from "./Department";
+import { Image } from "./Image";
 import { Role } from "./Role";
 
 export class User {
@@ -9,8 +10,16 @@ export class User {
   password!: string;
   role!: Role;
   department!: Department;
+  image!:Image;
 
-  constructor(id: number, firstname: string, lastname: string, username: string, password: string, role: Role ,department: Department) {
+  constructor(id: number, firstname: string,
+  lastname: string,
+  username: string,
+  password: string,
+  role: Role,
+  department: Department,
+  image: Image
+) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
@@ -18,6 +27,7 @@ export class User {
     this.password = password;
     this.role = role;
     this.department = department;
+    this.image=image;
 
   }
 }

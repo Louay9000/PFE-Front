@@ -40,4 +40,9 @@ GetDepartmentsWithoutOkr(): Observable<Department[]> {
   return this.http.get<Department[]>(`${this.baseUrl}/departments/without-okr`);
 }
 
+GetDepartmentNameByUserId(userId: number): Observable<string> {
+  return this.http.get(`${this.baseUrl}/${userId}/department-name`, { responseType: 'text' });
 }
+
+}
+

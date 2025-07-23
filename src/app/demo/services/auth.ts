@@ -26,6 +26,8 @@ private baseUrl = 'http://localhost:8085';
   userId!:any;
   lastname:any;
   firstname:any;
+  
+
 
 
 
@@ -73,14 +75,14 @@ private baseUrl = 'http://localhost:8085';
     this.isAuthenticated=true;
     this.accessToken = localStorage.getItem('accessToken');
     this.refreshToken = localStorage.getItem('refreshToken');
-    console.log("Access Token: ", this.accessToken);
-    console.log("Refresh Token: ", this.refreshToken);
     let decodedJwt:any =  jwtDecode(this.accessToken);
     this.username=decodedJwt.sub;
     this.UserRole=decodedJwt.role;
     this.userId=decodedJwt.id;
     this.lastname=decodedJwt.lastname;
     this.firstname=decodedJwt.firstname;
+
+
   }
 
 RefreshToken(): Observable<AuthenticationResponse> {

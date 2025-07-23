@@ -40,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
               console.log("Nouveau refreshToken : ", res.refreshToken);
               // Refaire la requête initiale avec le nouveau accessToken
 
-              
+
               // Cloner la requête originale avec le nouveau accessToken
 
               return next.handle(retryReq);

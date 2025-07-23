@@ -10,6 +10,7 @@ import { DepartmentService } from '../services/department-service';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Task } from '../models/Task';
+import { Image } from '../models/Image';
 
 
 
@@ -30,9 +31,11 @@ CheckTasksByUserIdPopUp: boolean = false;
 department : Department = new Department(null, '', '', null);
 selecteddepartmentid: number = null;
 
-  User: User = new User(null, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN,this.department); // ou Role.ADMIN / Role.MANAGER
+image : Image = new Image();
+
+  User: User = new User(null, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN,this.department,this.image); // ou Role.ADMIN / Role.MANAGER
   UsersList: User[] = [];
-  selectedUser: User = new User(0, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN,this.department);;
+  selectedUser: User = new User(0, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN,this.department,this.image);
 
   p:any;
 
@@ -82,7 +85,7 @@ getAllDepartments() {
   }
 
   openAddUserPopup(): void {
-    this.User = new User(null, '', '', '', '', Role.EMPLOYEE, this.department); // Réinitialiser le formulaire
+    this.User = new User(null, '', '', '', '', Role.EMPLOYEE, this.department,this.image); // Réinitialiser le formulaire
     this.AddUserPopup = true;
   }
 
@@ -128,7 +131,7 @@ isUsernameUnique(Username: string): boolean {
       });
 
       // ✅ Réinitialiser le formulaire
-      this.User = new User(null, '', '', '', '', Role.EMPLOYEE, this.department);
+      this.User = new User(null, '', '', '', '', Role.EMPLOYEE, this.department,this.image);
 
 
     },
@@ -221,7 +224,7 @@ UpdateUser(user: User) {
       }).then(() => {
         this.getAllUsers(); // Refresh
         this.UpdateUserPopup = false;
-        this.User = new User(null, '', '', '', '', Role.EMPLOYEE, this.department); // Reset form
+        this.User = new User(null, '', '', '', '', Role.EMPLOYEE, this.department,this.image); // Reset form
       });
     },
     error: (error) => {
@@ -283,9 +286,9 @@ openCheckTasksByUserIdPopUp(user: User): void {
 closeCheckTasksByUserIdPopUp(): void {
   this.CheckTasksByUserIdPopUp = false;
   this.TasksList = []; // Clear the list when closing the popup
-  this.selectedUser = new User(0, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN, this.department); // Reset selected user
+  this.selectedUser = new User(0, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN, this.department,this.image); // Reset selected user
   this.selecteddepartmentid = null; // Reset selected department ID
-  this.User = new User(null, '', '', '', '', Role.EMPLOYEE, this.department); // Reset user form
+  this.User = new User(null, '', '', '', '', Role.EMPLOYEE, this.department,this.image); // Reset user form
 
 }
 

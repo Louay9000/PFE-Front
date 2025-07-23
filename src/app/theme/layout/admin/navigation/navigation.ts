@@ -39,7 +39,6 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     icon: 'icon-navigation',
     children: [
-
       {
         id: 'users',
         title: 'Users',

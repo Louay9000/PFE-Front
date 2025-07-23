@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { Okr } from '../models/Okr';
 import { User } from '../models/User';
 import { Role } from '../models/Role';
+import {Image} from '../models/Image';
 import { Department } from '../models/Department';
 import { OkrService } from '../services/okr-service';
 
@@ -41,7 +42,9 @@ selectedokrid: number = null;
 
 department : Department = new Department(null, '', '', null);
 
-user: User = new User(null, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN, this.department);
+image : Image = new Image();
+
+user: User = new User(null, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN, this.department,this.image);
 selecteduserid: number = null;
 
 

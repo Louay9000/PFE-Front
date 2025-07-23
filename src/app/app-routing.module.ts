@@ -44,8 +44,8 @@ const routes: Routes = [
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent)
       },
       {
-        path: 'typography',
-        loadComponent: () => import('./demo/elements/typography/typography.component')
+        path: 'photoeditprofile',
+        loadComponent: () => import('./demo/photoeditprofile/photoeditprofile').then((c) => c.Photoeditprofile)
       },
       {
         path: 'color',
