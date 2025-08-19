@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Task } from '../models/Task';
+import { Status } from '../models/Status';
+import { Role } from '../models/Role';
 
 
 @Injectable({
@@ -16,8 +18,8 @@ constructor(private http:HttpClient , private router : Router) { }
 private baseUrl = 'http://localhost:8085';
 
 
-getAllTasks() {
-  return this.http.get(`${this.baseUrl}/tasks` );
+getAllTasks(role:Role, userId: number) {
+  return this.http.get(`${this.baseUrl}/tasks/${role}/${userId}`);
 }
 
 
@@ -35,7 +37,25 @@ DeleteTask(task : Task) {
   return this.http.delete(`${this.baseUrl}/tasks/${task.id}`);
 }
 
+createTaskAndAssign(task: Task, departmentId: number, userId: number) {
+  return this.http.post(`${this.baseUrl}/tasks/assign/${departmentId}/${userId}`, task);
+}
 
+getTasksCountByStatus() {
+  return this.http.get(`${this.baseUrl}/tasks/stats/status`);
+}
+
+getTopUserWithReachedTasks() {
+  return this.http.get(`${this.baseUrl}/tasks/top-user-reached`);
+}
+
+getTasksByDepartment(departmentId: number) {
+  return this.http.get(`${this.baseUrl}/tasks/by-department/${departmentId}`);
+}
+
+getTaskStatusCountByUserId(userId: number) {
+  return this.http.get(`${this.baseUrl}/tasks/stats-by-user/${userId}`);
+}
 
 }
 

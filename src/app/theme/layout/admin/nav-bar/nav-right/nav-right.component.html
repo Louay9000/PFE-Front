@@ -4,12 +4,33 @@
       <div class="dropdown pc-h-item">
         <a
           class="pc-head-link head-link-primary arrow-none me-0"
-          href="https://github.com/codedthemes/berry-free-angular-admin-template/"
+          href="https://github.com"
           target="_blank"
         >
           <i class="ti ti-brand-github"></i>
         </a>
+          <div class="dropdown pc-h-item">
+        <a
+          class="pc-head-link head-link-primary arrow-none me-0"
+          href="https://linkedin.com"
+          target="_blank"
+        >
+          <i class="ti ti-brand-linkedin"></i>
+        </a>
       </div>
+      <div class="dropdown pc-h-item">
+        <a
+          class="pc-head-link head-link-primary arrow-none me-0"
+          href="https://facebook.com"
+          target="_blank"
+        >
+          <i class="ti ti-brand-facebook"></i>
+        </a>
+      </div>
+
+      </div>
+
+
     </li>
     <li>
       <div class="dropdown pc-h-item" ngbDropdown>
@@ -142,29 +163,41 @@
             style="width: 40px; height: 40px; object-fit: cover;"
           />
         </div>
-          <span>
-            <i class="ti ti-settings"></i>
+          <span class="profile-initials-wrapper">
+          <ng-container *ngIf="!getUserImage(myprofileuser)">
+          <div class="initials-circle">
+          {{ myprofileuser.firstname[0] }}{{ myprofileuser.lastname[0] }}
+          </div>
+          </ng-container>
+          <i class="ti ti-settings ms-2"></i>
           </span>
+
         </a>
         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
           <div class="dropdown-header">
-            <h3>
-              Welcome Back 👋
-              <span class="small text-bg-info">{{myprofileuser.firstname}} {{myprofileuser.lastname}}</span>
-            </h3>
+            <p>You are logged in as</p>
+            <h4>
+              <span class="small text-bg-info"> 🔐 {{myprofileuser.firstname}} {{myprofileuser.lastname}} </span>
+            </h4>
 
             <ng-scrollbar style="height: calc(100vh - 280px)" visibility="hover">
               <a [routerLink]="['/photoeditprofile']" class="dropdown-item">
                 <i class="ti ti-settings"></i>
                 <span>Account Profile</span>
+                <i
+                *ngIf="!getUserImage(myprofileuser)"
+                class="ti ti-exclamation-circle text-danger ms-2"
+                title="Image de profil manquante"
+                ></i>
               </a>
-              <a href="javascript:" class="dropdown-item">
+              <a *ngIf="myprofileuser.role === 'EMPLOYEE'" [routerLink]="['/employeetasks']"
+                class="dropdown-item">
                 <i class="ti ti-clipboard-copy"></i>
                 <span>Check your tasks</span>
               </a>
-              <a href="javascript:" class="dropdown-item">
+              <a href="javascript:" class="dropdown-item" [routerLink]="['/chat']">
                 <i class="ti ti-message"></i>
-                <span>Discussion</span>
+                <span>Chat</span>
               </a>
             <a href="#" (click)="logout()" class="dropdown-item">
               <i class="ti ti-logout"></i>

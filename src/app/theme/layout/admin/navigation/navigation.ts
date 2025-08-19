@@ -45,7 +45,8 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/users',
-        icon: 'ti ti-user'
+        icon: 'ti ti-user',
+        role: ['ADMIN','MANAGER'],
       },
       {
         id: 'tabler',
@@ -63,15 +64,18 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/departments',
         icon: 'ti ti-article',
-        external: true},
-
-        {id: 'OKR',
+        external: true,
+        role: ['ADMIN']
+      },
+        {
+        id: 'OKR',
         title: 'OKR',
         type: 'item',
         classes: 'nav-item',
         url: '/okrs',
         icon: 'ti ti-assembly',
-        external: true},
+        external: true,
+        role: ['ADMIN']},
 
         {id: 'Tasks',
         title: 'Tasks',
@@ -80,6 +84,7 @@ export const NavigationItems: NavigationItem[] = [
         url: '/tasks',
         icon: 'ti ti-clipboard-list',
         external: true,
+        role: ['ADMIN','MANAGER']
         }
     ]
   },
@@ -90,11 +95,11 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
-        id: 'Discussions',
-        title: 'Discussions',
+        id: 'Chat',
+        title: 'Chat',
         type: 'item',
         classes: 'nav-item',
-        url: '/authentication/login',
+        url: '/chat/:userId',
         icon: 'ti ti-brand-hipchat'
       },
       {

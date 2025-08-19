@@ -3,12 +3,10 @@
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="text-primary">👤 Users Management</h1>
 
-    <button class="btn btn-success" (click)="openAddUserPopup()">
+    <button *ngIf="Auth.isAdmin()" class="btn btn-success" (click)="openAddUserPopup()">
       <i class="bi bi-person-plus"></i>
     </button>
   </div>
-
-
 
 
   <div class="container mt-4">
@@ -18,33 +16,41 @@
       *ngFor="let user of UsersList | paginate: { itemsPerPage: 3, currentPage: p }"
     >
       <div class="profile-card">
-        <!-- Photo de profil (initiales avec SVG cercle) -->
+        <!-- Photo de profil (image ou initiales) -->
         <div class="profile-image">
-          <svg
-            width="70"
-            height="70"
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="50" cy="50" r="48" fill="#7fcef2" />
-            <text
-              x="50%"
-              y="55%"
-              text-anchor="middle"
-              font-size="32"
-              fill="white"
-              font-family="Arial, sans-serif"
-              dominant-baseline="middle"
+          <ng-container *ngIf="getUserImage(user)?.imageUrl; else initials">
+            <img
+              [src]="getUserImage(user)?.imageUrl"
+              alt="User Image"
+              class="user-avatar"
+            />
+          </ng-container>
+          <ng-template #initials>
+            <svg
+              class="user-avatar"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              {{ user.firstname[0] }}{{ user.lastname[0] }}
-            </text>
-          </svg>
+              <circle cx="50" cy="50" r="48" fill="#7fcef2" />
+              <text
+                x="50%"
+                y="55%"
+                text-anchor="middle"
+                font-size="32"
+                fill="white"
+                font-family="Arial, sans-serif"
+                dominant-baseline="middle"
+              >
+                {{ user.firstname[0] }}{{ user.lastname[0] }}
+              </text>
+            </svg>
+          </ng-template>
         </div>
 
         <!-- Informations utilisateur -->
         <div class="profile-info">
           <p class="profile-name">{{ user.firstname }} {{ user.lastname }}</p>
-          <div class="profile-title">{{ user.username }}</div>
+          <div class="profile-email">{{ user.email }}</div>
           <div class="profile-bio">
             <div><strong>Role:</strong> {{ user.role }}</div>
             <div>
@@ -57,6 +63,7 @@
         <!-- Boutons d'action -->
         <div class="social-links">
           <button
+          *ngIf="Auth.isAdmin()"
             class="social-btn"
             title="Edit"
             (click)="openUpdateUseropup(user)"
@@ -64,22 +71,30 @@
             <i class="bi bi-pencil-fill"></i>
           </button>
           <button
+          *ngIf="Auth.isAdmin()"
             class="social-btn"
             title="Delete"
-            (click)="deleteUser(user)">
+            (click)="deleteUser(user)"
+          >
             <i class="bi bi-trash-fill"></i>
           </button>
-
-          <button
+          <button *ngIf="Auth.isManager()"
             class="social-btn"
             title="View"
-            (click)="getTasksByUserId(user.id)"
+            (click)="getTasksByUserId(user)"
           >
             <i class="bi bi-eye-fill"></i>
           </button>
         </div>
       </div>
     </div>
+    <div *ngIf="UsersList.length === 0" class="card border-0 shadow-sm mt-4 text-center py-5 bg-light">
+  <div class="card-body">
+    <i class="bi bi-person-x fs-1 text-danger mb-3"></i>
+    <h5 class="card-title text-secondary">No User Found</h5>
+    <p class="card-text text-muted">There are no users associated with this department at the moment.</p>
+  </div>
+</div>
   </div>
 
   <!-- Pagination -->
@@ -90,6 +105,7 @@
     ></pagination-controls>
   </div>
 </div>
+
 
   <!-- Add User Popup -->
 <div *ngIf="AddUserPopup" class="modal show d-block" tabindex="-1">
@@ -107,6 +123,7 @@
         <input [(ngModel)]="User.firstname" placeholder="Name" class="form-control mb-2">
         <input [(ngModel)]="User.lastname" placeholder="Lastname" class="form-control mb-2">
         <input [(ngModel)]="User.username" placeholder="Username" class="form-control mb-2">
+        <input [(ngModel)]="User.email" placeholder="Email" class="form-control mb-2">
         <input type="password" [(ngModel)]="User.password" placeholder="Password" class="form-control mb-2">
 
         <label class="form-label">Select Role</label>
@@ -141,7 +158,7 @@
         <input [(ngModel)]="User.lastname" placeholder="Lastname" class="form-control mb-2">
         <input [(ngModel)]="User.username" placeholder="Username" class="form-control mb-2">
         <input [(ngModel)]="User.password" placeholder="Password" class="form-control mb-2">
-
+        <input [(ngModel)]="User.email" placeholder="Email" class="form-control mb-2">
         <select [(ngModel)]="User.role" class="form-select mb-2">
           <option value="" disabled selected>Select Role</option>
           <option value="MANAGER">MANAGER</option>
@@ -205,9 +222,9 @@
             </div>
             <p class="mb-1 text-secondary">{{ task.taskDescription }}</p>
             <div class="d-flex justify-content-between mt-2">
-              <small>📈 Début: {{ task.taskStartValue }}</small>
-              <small>✅ Fait: {{ task.taskDoneValue }}</small>
-              <small>⚖️ Poids: {{ task.taskWeight }}</small>
+              <small>📈 Start: {{ task.taskStartValue }}</small>
+              <small>✅ Done: {{ task.taskDoneValue }}</small>
+              <small>⚖️ Weight: {{ task.taskWeight }}</small>
             </div>
           </div>
         </div>
@@ -215,14 +232,118 @@
 
       <div class="modal-footer justify-content-end">
         <button
+        *ngIf="Auth.isManager()"
           type="button"
           class="btn btn-outline-secondary"
           (click)="closeCheckTasksByUserIdPopUp()"
         >
-          Close
+          ❌
+        </button>
+        <button
+        *ngIf="Auth.isManager()"
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="openAssignTaskPopup(this.selecteddepartmentIdInTaskPopUp, this.selectedUserIdInTaskPopUp)"
+        >🧑‍💻
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<!--open Assign Task to User-->
+<div
+  class="modal fade show d-block"
+  *ngIf="AssignTaskPopup"
+  tabindex="-1"
+  style="background-color: rgba(0, 0, 0, 0.5);"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 border-0">
+      <div class="modal-header bg-primary text-white rounded-top-4">
+        <h5 class="modal-title w-100 text-center">
+          📝 Assign Task
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="closeAssignTaskPopup()"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="taskTitle" class="form-label"> Title</label>
+            <input
+              type="text"
+              id="taskTitle"
+              [(ngModel)]="Task.taskTitle"
+              name="taskTitle"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="taskDescription" class="form-label"> Description</label>
+            <textarea
+              id="taskDescription"
+              [(ngModel)]="Task.taskDescription"
+              name="taskDescription"
+              class="form-control"
+              rows="3"
+              required
+            ></textarea>
+            <label for="taskState" class="form-label">State</label>
+            <select
+              id="taskState"
+              [(ngModel)]="Task.taskState"
+              name="taskState"
+              class="form-select mt-2"
+              required
+            >
+              <option value="UNREACHED">UNREACHED</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="taskStartValue" class="form-label"> Start Value</label>
+            <input
+              type="number"
+              id="taskStartValue"
+              [(ngModel)]="Task.taskStartValue"
+              name="taskStartValue"
+              class="form-control"
+              required
+            />
+            <label for="taskDoneValue" class="form-label"> Done Value</label>
+            <input
+              type="number"
+              id="taskDoneValue"
+              [(ngModel)]="Task.taskDoneValue"
+              name="taskDoneValue"
+              class="form-control mt-2"
+              required
+            />
+            <label for="taskWeight" class="form-label">Task Weight</label>
+            <input
+              type="number"
+              id="taskWeight"
+              [(ngModel)]="Task.taskWeight"
+              name="taskWeight"
+              class="form-control mt-2"
+              required
+            />
+            <div class="text-end mt-3">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="assignTaskToUser(Task, selecteddepartmentIdInTaskPopUp, selectedUserIdInTaskPopUp)"
+            >
+              📌✍️
+            </button>
+            </div>
+          </div>
+
+
 

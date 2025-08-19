@@ -122,3 +122,38 @@ h5.text-secondary a:hover {
     width: 80%;
   }
 }
+.modern-quote {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #00b4d8, #0077b6, #0096c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.4rem;
+  display: inline-block;
+}
+
+.rocket-icon {
+  color: #ff6f61;
+  font-size: 1.2rem;
+  animation: rocketMove 1.5s infinite ease-in-out;
+}
+
+@keyframes rocketMove {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+/* Bouton login */
+.btn-login {
+  background: linear-gradient(90deg, #00b4d8, #0077b6);
+  border: none;
+  padding: 10px;
+  border-radius: 50px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}

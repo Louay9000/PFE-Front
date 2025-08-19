@@ -53,10 +53,10 @@
       </div>
 
       <div class="mt-2 mt-md-0">
-        <button class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateOkrPopup(okr)">
+        <button *ngIf="auth.isAdmin()" class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateOkrPopup(okr)">
           <i class="bi bi-pencil"></i>
         </button>
-        <button class="btn btn-outline-danger btn-sm" (click)="DeleteOkr(okr)">
+        <button *ngIf="auth.isAdmin()" class="btn btn-outline-danger btn-sm" (click)="DeleteOkr(okr)">
           <i class="bi bi-trash"></i>
         </button>
       </div>
@@ -103,8 +103,8 @@
     <div>
 
     <div><label class="form-label">Select Department</label>
-        <select class="form-select" [(ngModel)]="selecteddepartmentid" name="department" required>
-        <option *ngFor="let dept of DepartmentsWithoutOkr">{{ dept.departmentName }}</option>
+        <select class="form-select" [value]="selecteddepartmentid" [(ngModel)]="selecteddepartmentid" name="department" required>
+        <option *ngFor="let dept of DepartmentsWithoutOkr" [ngValue]="dept.id">{{ dept.departmentName }}</option>
         </select>
     </div>
 

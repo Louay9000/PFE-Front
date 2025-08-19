@@ -10,7 +10,7 @@ import { User } from '../models/User';
 })
 export class DepartmentService {
 
-  constructor(private http:HttpClient , private router : Router) { }
+  constructor(private http:HttpClient ) { }
 
   private baseUrl = 'http://localhost:8085';
 
@@ -43,6 +43,11 @@ GetDepartmentsWithoutOkr(): Observable<Department[]> {
 GetDepartmentNameByUserId(userId: number): Observable<string> {
   return this.http.get(`${this.baseUrl}/${userId}/department-name`, { responseType: 'text' });
 }
+
+GetDepartmentIdByUserId(userId: number): Observable<number> {
+  return this.http.get<number>(`${this.baseUrl}/${userId}/department-id`);
+}
+
 
 }
 

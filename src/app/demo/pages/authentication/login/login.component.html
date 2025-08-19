@@ -13,9 +13,17 @@
                   <a href="https://www.sqits.net/" class="d-flex justify-content-center">
             <img src="assets/images/squareit.png" alt="logo"/>
           </a>
-          <h4 class="text-center text-info-emphasis">
-          Driving success through clarity and purpose  powered by OKRs at Square IT 🚀
-          </h4>
+          <h4 class="modern-quote text-center fw-bold">
+  <span class="gradient-text">
+    Driving success through clarity and purpose
+  </span>
+  <br />
+  <small class="fw-semibold text-muted">
+    powered by OKRs at <span class="text-primary">Square IT</span>
+    <i class="bi bi-rocket-takeoff-fill rocket-icon"></i>
+  </small>
+</h4>
+
                 <p class="fs-4 mt-2"> 🔐 Enter your credentials to continue </p>
               </div>
             </div>
@@ -37,12 +45,10 @@
             <div class="form-check">
 
             </div>
-            <h5 class="text-secondary">
-              <a href="javascript:">Forgot Password?</a>
-            </h5>
+            
           </div>
           <div class="d-grid mt-4">
-            <button (click)="login()" class="btn btn-primary mb-4">Login</button>
+            <button (click)="login()" class="btn btn-login mb-4">Login</button>
 
             <!-- ✅ Modal d'erreur -->
 <ng-template #errorModal let-modal>
@@ -57,8 +63,6 @@
     <button type="button" class="btn btn-secondary" (click)="modal.close()">Fermer</button>
   </div>
 </ng-template>
-
-
           </div>
           <hr />
         </div>

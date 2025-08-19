@@ -20,7 +20,7 @@
         <div class="loader"></div>
         </div>
         <div *ngIf="!getUserImage(myprofileuser)">
-          <p>No images found for this user.</p>
+          <p>No image . Insert one as soon as possible</p>
         </div>
 
         <!-- Sélection image -->
@@ -53,6 +53,10 @@
             <div class="row mb-2">
               <div class="col-md-4 font-weight-bold">Username</div>
               <div class="col-md-8">{{ myprofileuser.username }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-4 font-weight-bold">Email</div>
+              <div class="col-md-8">{{ myprofileuserEmail }}</div>
             </div>
             <div class="row mb-2">
               <div class="col-md-4 font-weight-bold">Department</div>

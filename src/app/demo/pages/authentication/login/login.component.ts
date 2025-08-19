@@ -31,6 +31,7 @@ user: User ={
     firstname: '',
     lastname: '',
     username: '',
+    email: '',
     password: '',
     role: Role.ADMIN || Role.MANAGER || Role.EMPLOYEE,
     department: null,

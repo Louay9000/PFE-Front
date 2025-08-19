@@ -40,3 +40,24 @@
 .dropdown-user-profile ng-scrollbar {
   max-height: 200px;
 }
+.profile-initials-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.initials-circle {
+  width: 40px;
+  height: 40px;
+  background-color: #7fcef2; // ou n'importe quelle couleur douce
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Arial', sans-serif;
+  text-transform: uppercase;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}

@@ -166,3 +166,148 @@
   text-align: center;
   margin-top: 1rem;
 }
+.pie-card {
+
+  background: linear-gradient(135deg, #6234ac, #83acff);
+  color: #fff;
+  border-radius: 50px;
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  h5 {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #ffffff;
+  }
+
+  ::ng-deep .apexcharts-legend {
+    padding-top: 1rem;
+    justify-content: center !important;
+  }
+
+  ::ng-deep .apexcharts-legend-series {
+    margin: 0 10px;
+  }
+
+  ::ng-deep .apexcharts-legend-text {
+    color: #ffffff !important;
+  }
+
+  ::ng-deep .apexcharts-datalabels,
+  ::ng-deep .apexcharts-text {
+    fill: #fff !important;
+  }
+}
+.card {
+  border-radius: 1rem;
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+.fade {
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
+}
+.task-stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  padding: 2rem;
+  background: #f0f2f5;
+}
+
+.task-card {
+  flex: 1 1 250px;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+  color: #212529;
+  cursor: default;
+}
+
+.task-card:hover {
+  transform: translateY(-6px);
+}
+
+.task-card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.task-card .label {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.task-card .count {
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+
+/* 🎨 Color backgrounds */
+.task-card.reached {
+  background: #d4edda; /* pastel green */
+  border-top: 5px solid #28a745;
+}
+
+.task-card.inprogress {
+  background: #fff3cd; /* pastel yellow */
+  border-top: 5px solid #ffc107;
+}
+
+.task-card.unreached {
+  background: #f8d7da; /* pastel red */
+  border-top: 5px solid #dc3545;
+}
+
+.d-flex.justify-content-between.align-items-center.mb-4 h2 {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #444444; /* Gris foncé neutre */
+  letter-spacing: 1.1px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  user-select: none;
+  transition: color 0.3s ease;
+  cursor: default;
+}
+
+.d-flex.justify-content-between.align-items-center.mb-4 h2:hover {
+  color: #222222;
+  transform: scale(1.03);
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, #6a11cb, #2575fc); /* Un joli dégradé violet-bleu */
+  color: white;
+  border: none;
+  transition: background 0.3s ease;
+  box-shadow: 0 2px 6px rgba(101, 58, 255, 0.4);
+}
+
+.btn-gradient:hover, .btn-gradient:focus {
+  background: linear-gradient(90deg, #2575fc, #6a11cb);
+  color: white;
+  box-shadow: 0 4px 12px rgba(101, 58, 255, 0.7);
+  outline: none;
+}
+
+.btn-outline-info {
+  padding: 0.35rem 0.6rem;
+  font-size: 1.3rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

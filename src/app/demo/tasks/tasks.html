@@ -2,11 +2,22 @@
 <div class="container py-4">
 
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="text-primary fw-bold">📋 Task Manager</h1>
-    <button class="btn btn-success rounded-pill px-4" (click)="openAddTaskPopop()">
-      ➕
+  <h1 class="text-primary fw-bold">📋 Task Management</h1>
+
+  <div class="d-flex gap-2">
+    <button *ngIf="Auth?.isManager()"
+            class="btn btn-success rounded-pill px-4 d-flex align-items-center"
+            (click)="openAddTaskPopop()">
+      ➕ <span class="ms-2"></span>
+    </button>
+
+    <button class="btn btn-primary rounded-pill px-4 d-flex align-items-center"
+            (click)="downloadCsv()">
+      📥 <span class="ms-2"></span>
     </button>
   </div>
+</div>
+
   <!-- 🔍 Barre de recherche -->
     <div class="input-group mb-4">
     <span class="input-group-text bg-white border-end-0">
@@ -18,6 +29,16 @@
       placeholder="Search a Task ..."
       [(ngModel)]="searchText"
     />
+  </div>
+
+  <!-- Probabilités ML -->
+  <div *ngIf="probabilities" class="mb-4 p-3 border rounded shadow-sm bg-light">
+    <h5 class="fw-bold">🔮 Task Probabilities</h5>
+    <div class="d-flex gap-3">
+      <span class="badge bg-success">Reached: {{ probabilities.proba_REACHED | percent }}</span>
+      <span class="badge bg-warning text-dark">In Progress: {{ probabilities.proba_INPROGRESS | percent }}</span>
+      <span class="badge bg-danger">Unreached: {{ probabilities.proba_UNREACHED | percent }}</span>
+    </div>
   </div>
 
 <!-- Zone des résultats -->
@@ -37,9 +58,6 @@
 </div>
 
 
-
-
-
   <div class="table-responsive">
     <table class="table table-hover table-bordered align-middle shadow-sm">
       <thead class="table-light text-center">
@@ -52,7 +70,9 @@
           <th>Weight</th>
           <th>Related OKR</th>
           <th>Assigned User</th>
-          <th>Actions</th>
+
+          <th *ngIf="Auth?.isManager()" >Actions</th>
+          <th>ML Probabilities</th>
         </tr>
       </thead>
       <tbody *ngIf="searchText.trim() === '' && TasksList.length > 0; else noTasksOrSearch ">
@@ -68,7 +88,7 @@
             [ngClass]="{
             'bg-success': task.taskState === 'REACHED',
             'bg-danger': task.taskState === 'UNREACHED',
-            'bg-info': task.taskState === 'INPROGRESS'}">
+            'bg-warning': task.taskState === 'INPROGRESS'}">
             {{ task.taskState === 'REACHED' ? 'Reached' : task.taskState === 'UNREACHED' ? 'UNREACHED' : 'INPROGRESS' }}
             </span>
           </td>
@@ -97,9 +117,23 @@
 
 
           <td class="text-center">
-            <button class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateTaskPopup(task)">✏️</button>
-            <button class="btn btn-outline-danger btn-sm" (click)="DeleteTask(task)">🗑️</button>
+            <button *ngIf="Auth?.isManager()" class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateTaskPopup(task)">✏️</button>
+            <button *ngIf="Auth?.isManager()" class="btn btn-outline-danger btn-sm" (click)="DeleteTask(task)">🗑️</button>
           </td>
+          <td>
+  <div class="d-flex gap-2 justify-content-center">
+    <span class="badge bg-success" *ngIf="task.proba_REACHED !== undefined">
+      Reached: {{ task.proba_REACHED | percent }}
+    </span>
+    <span class="badge bg-warning text-dark" *ngIf="task.proba_INPROGRESS !== undefined">
+      In Progress: {{ task.proba_INPROGRESS | percent }}
+    </span>
+    <span class="badge bg-danger" *ngIf="task.proba_UNREACHED !== undefined">
+      Unreached: {{ task.proba_UNREACHED | percent }}
+    </span>
+  </div>
+</td>
+
         </tr>
       </tbody>
     </table>
@@ -137,8 +171,6 @@
             <label>Status</label>
             <select class="form-select" [(ngModel)]="Task.taskState" name="taskState">
               <option value="UNREACHED">UNREACHED</option>
-              <option value="INPROGRESS">InProgress</option>
-              <option value="REACHED">REACHED</option>
             </select>
           </div>
           <div class="mb-3 d-flex gap-3">
@@ -168,9 +200,24 @@
               </select>
             </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-success">Save</button>
-            <button type="button" class="btn btn-secondary" (click)="closeAddTaskPopop()">Cancel</button>
-          </div>
+  <!-- Bouton Cancel -->
+  <button
+    type="button"
+    class="btn btn-secondary btn-animated"
+    (click)="closeAddTaskPopop()"
+  >
+    ❌
+  </button>
+
+  <!-- Bouton Save -->
+  <button
+    type="submit"
+    class="btn btn-success btn-animated"
+  >
+    💾
+  </button>
+  </div>
+
         </form>
       </div>
     </div>
@@ -199,8 +246,8 @@
             <label>Status</label>
             <select class="form-select" [(ngModel)]="Task.taskState" name="editState">
               <option value="UNREACHED">UNREACHED</option>
-              <option value="INPROGRESS">INPROGRESS</option>
               <option value="REACHED">REACHED</option>
+              <option value="INPROGRESS">INPROGRESS</option>
             </select>
           </div>
           <div class="mb-3 d-flex gap-3">

@@ -33,5 +33,11 @@ UpdateOkr(okr: Okr,departmentId: number,objectiveId: number) {
 DeleteOkr(okr : Okr) {
   return this.http.delete(`${this.baseUrl}/okrs/${okr.id}`);  }
 
+GetOkrIdByDepartmentId(departmentId: number) {
+  return this.http.get<Okr[]>(`${this.baseUrl}/okrs/${departmentId}`);
+}
+getOkrsByDepartmentId(departmentId: number) {
+  return this.http.get<Okr[]>(`${this.baseUrl}/okrs/by-department/${departmentId}`);
+}
 
 }

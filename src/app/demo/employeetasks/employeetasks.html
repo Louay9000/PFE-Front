@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<div class="container mt-4">
+  <h2 class="mb-4 text-center task-title">My Tasks 📋⏳</h2>
+
+  <div *ngIf="TasksLists.length > 0">
+    <div class="card mb-3 shadow-sm" *ngFor="let task of TasksLists">
+      <div class="card-body">
+        <h5 class="card-title d-flex justify-content-between align-items-center">
+          {{ task.taskTitle }}
+          <span class="text-muted"><i class="bi bi-clipboard-check"></i></span>
+        </h5>
+
+        <p class="card-text mb-2">
+          <strong>Description :</strong> {{ task.taskDescription }}<br>
+          <strong>Start Value :</strong> {{ task.taskStartValue }}<br>
+          <strong>Done Value :</strong> {{ task.taskDoneValue }}<br>
+          <strong>Status :</strong>
+          <span [ngClass]="{
+            'badge bg-danger': task.taskState === 'UNREACHED',
+            'badge bg-warning text-dark': task.taskState === 'INPROGRESS',
+            'badge bg-success': task.taskState === 'REACHED'
+          }">
+            {{ task.taskState }}
+          </span>
+        </p>
+
+        <p *ngIf="task.okr">
+          <strong>Linked OKR :</strong> {{ task.okr.keyindicatorTitle }}
+        </p>
+
+        <p class="mb-2">
+          <strong>Weight :</strong>
+          <span *ngFor="let star of [0,1,2,3,4]; let i = index">
+            <i [class]="getStarClass(i, task.taskWeight)"></i>
+          </span>
+          <small class="text-muted">({{ task.taskWeight }}/5)</small>
+        </p>
+
+        <!-- Durée prédite ML -->
+        <p *ngIf="task.predictedDuration !== undefined">
+          <strong>Predicted Duration :</strong>
+          <span class="badge bg-info text-dark">{{ task.predictedDuration | number:'1.1-2' }} days</span>
+        </p>
+
+        <!-- Boutons selon le statut -->
+        <div class="mt-2">
+          <button *ngIf="task.taskState === 'UNREACHED'" class="btn btn-warning btn-sm me-2" (click)="markTaskInProgress(task)">
+            Start Task <i class="bi bi-play-circle"></i>
+          </button>
+          <button *ngIf="task.taskState === 'INPROGRESS'" class="btn btn-success btn-sm" (click)="markTaskReached(task)">
+            Mark as Done <i class="bi bi-check-circle"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="TasksLists.length === 0" class="alert alert-info mt-4 text-center">
+    No task assigned for you at this moment! 📭
+  </div>
+</div>

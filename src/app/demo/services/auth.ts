@@ -26,7 +26,7 @@ private baseUrl = 'http://localhost:8085';
   userId!:any;
   lastname:any;
   firstname:any;
-  
+
 
 
 
@@ -96,8 +96,8 @@ RefreshToken(): Observable<AuthenticationResponse> {
 }
 
 
-getAllUsers() {
-  return this.http.get(`${this.baseUrl}`);
+getAllUsers(role : Role, userId : number) {
+  return this.http.get(`${this.baseUrl}/${role}/${userId}`);
 }
 
 
@@ -122,5 +122,12 @@ return this.http.put<User>(`${this.baseUrl}/users/${user.id}`, user);
 GetTaskByUserId(id: number) {
   return this.http.get(`${this.baseUrl}/tasks/${id}`);
 }
+GetEmailByUserId(userId: number):Observable<string> {
+  return this.http.get(`${this.baseUrl}/${userId}/email`,{ responseType: 'text' });
+}
+
+
+
+
 
 }

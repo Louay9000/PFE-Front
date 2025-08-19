@@ -30,7 +30,7 @@ image : Image = new Image();
 
 
 
-myprofileuser: User = new User(null, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN,this.department,this.image);
+myprofileuser: User = new User(null, '', '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN,this.department,this.image);
 
 images: Image[] = [];
 

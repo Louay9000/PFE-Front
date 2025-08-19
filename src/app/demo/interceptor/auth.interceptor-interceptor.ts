@@ -12,8 +12,7 @@ export class AuthInterceptor implements HttpInterceptor {
     // Ne pas ajouter de token pour /login, /register ou /refresh_token
     if (
       request.url.includes("/login") ||
-      request.url.includes("/register")
-
+      request.url.includes("/register") 
     ) {
       return next.handle(request);
     }
@@ -39,7 +38,6 @@ export class AuthInterceptor implements HttpInterceptor {
               console.log("Nouveau accessToken : ", res.accessToken);
               console.log("Nouveau refreshToken : ", res.refreshToken);
               // Refaire la requête initiale avec le nouveau accessToken
-
 
               // Cloner la requête originale avec le nouveau accessToken
 

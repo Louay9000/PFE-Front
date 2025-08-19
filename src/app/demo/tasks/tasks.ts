@@ -14,6 +14,11 @@ import { Role } from '../models/Role';
 import {Image} from '../models/Image';
 import { Department } from '../models/Department';
 import { OkrService } from '../services/okr-service';
+import { DepartmentService } from '../services/department-service';
+import { Emailservice } from '../services/emailservice';
+import { catchError, of, switchMap } from 'rxjs';
+import { ExportService } from '../services/export-service';
+import { MlService, TaskProbabilities } from '../services/ml-service';
 
 
 
@@ -24,6 +29,8 @@ import { OkrService } from '../services/okr-service';
   styleUrl: './tasks.scss'
 })
 export class Tasks implements OnInit {
+
+
 TasksList : Task [] = [];
 searchText: string = '';
 noTasksOrSearch: any;
@@ -41,10 +48,11 @@ okr : Okr = new Okr(null, '', '', 0, 0, 0, 0, null, null);
 selectedokrid: number = null;
 
 department : Department = new Department(null, '', '', null);
+selecteddepartmentid: number ;
 
 image : Image = new Image();
 
-user: User = new User(null, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN, this.department,this.image);
+user: User = new User(null, '', '', '', '','', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN, this.department,this.image);
 selecteduserid: number = null;
 
 
@@ -62,29 +70,100 @@ Task: Task = {
 
 p:any;
 
-constructor(private taskService: TaskService, private auth: Auth,private okrService: OkrService) { }
+Auth=this.auth;
+
+probabilities: TaskProbabilities | null = null;
+
+
+
+constructor(private taskService: TaskService,
+  private auth: Auth,
+  private okrService: OkrService,
+  private departmentService: DepartmentService,
+  private emailService: Emailservice,
+  private exportSrv: ExportService,
+  private mlService: MlService
+) { }
 
   ngOnInit() {
     this.auth.loadProfile();
     this.getAllTasks();
     this.getAllokrs();
     this.getAllUsers();
+    this.loadTasksWithProbabilities();
   }
 
+
+  loadTasksWithProbabilities() {
+  this.taskService.getAllTasks(this.auth.UserRole, this.auth.userId).subscribe({
+    next: (tasks: Task[]) => {
+      this.TasksList = tasks;
+
+      // Affichage debug pour vérifier les inputs ML
+      this.TasksList.forEach(task => {
+        console.log('Input ML:', task.taskWeight, task.taskStartValue, task.taskDoneValue);
+        console.log('Input ML:', task.taskWeight, task.taskStartValue, task.taskDoneValue);
+
+        this.mlService.getTaskProbabilities({
+          taskWeight: task.taskWeight,
+          taskStartValue: task.taskStartValue,
+          taskDoneValue: task.taskDoneValue
+        }).subscribe({
+          next: (proba: TaskProbabilities) => {
+            console.log('Proba ML:', proba);
+            task.proba_REACHED = proba.proba_REACHED;
+            task.proba_INPROGRESS = proba.proba_INPROGRESS;
+            task.proba_UNREACHED = proba.proba_UNREACHED;
+          },
+          error: err => console.error('Erreur ML:', err)
+        });
+      });
+    },
+    error: err => console.error('Erreur Tasks:', err)
+  });
+}
+
+
+
   getAllUsers() {
-    this.auth.getAllUsers().subscribe((data: User[]) => {
-      this.UsersList = data;
+    this.auth.getAllUsers(this.auth.UserRole, this.auth.userId).subscribe((data: User[]) => {
+      this.UsersList = data.filter(user => user.id !== this.auth.userId);
     }, error => {
       console.error('Error fetching users:', error);
     });
   }
-  getAllokrs() {
-    this.okrService.getAllokrs().subscribe((data: Okr[]) => {
-      this.OkrsList = data;
-    }, error => {
-      console.error('Error fetching okrs:', error);
-    });
+
+  GetDepartmentIdByUserId(userId: number): void {
+    this.departmentService.GetDepartmentIdByUserId(userId).subscribe((data: number) =>
+    {
+      this.selecteddepartmentid = data;
+    },
+      error => {
+        console.error('Error fetching department:', error);
+      }
+    );
   }
+
+  getAllokrs() {
+  this.departmentService.GetDepartmentIdByUserId(this.auth.userId).subscribe(
+    (departmentId: number) => {
+      this.selecteddepartmentid = departmentId;
+
+      // Appeler getOkrsByDepartmentId uniquement après avoir obtenu l'ID
+      this.okrService.getOkrsByDepartmentId(this.selecteddepartmentid).subscribe(
+        (okrs: Okr[]) => {
+          this.OkrsList = okrs;
+        },
+        error => {
+          console.error('Error fetching okrs:', error);
+        }
+      );
+    },
+    error => {
+      console.error('Error fetching department id:', error);
+    }
+  );
+}
 
 
 
@@ -100,7 +179,7 @@ constructor(private taskService: TaskService, private auth: Auth,private okrServ
 }
 
   getAllTasks() {
-    this.taskService.getAllTasks().subscribe((data: Task[]) => {
+    this.taskService.getAllTasks(this.auth.UserRole, this.auth.userId).subscribe((data: Task[]) => {
       this.TasksList = data;
     }, error => {
       console.error('Error fetching tasks:', error);
@@ -113,46 +192,88 @@ constructor(private taskService: TaskService, private auth: Auth,private okrServ
     );
   }
 
-  AddTask(task:Task,okrId: number, userId: number) {
-    if (!this.isTaskTitleUnique(task.taskTitle)) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Duplicate title',
-            text: 'This task already exists (case not taken into account).',
-            timer: 99999,
-            timerProgressBar: true,
-            showConfirmButton: false
-          });
-
-        }
-        else{
-          this.taskService.AddTask(task, okrId, userId).subscribe((data: Task) => {
-                  window.location.reload();
-                  task.taskTitle = ''; // Clear the input field after adding
-                  this.Task = {
-                    id: null,
-                    taskTitle: '',
-                    taskDescription: '',
-                    taskState: null,
-                    taskStartValue: 0,
-                    taskDoneValue: 0,
-                    taskWeight: 0,
-                    okr: null,
-                    user: null
-                  };
-                }, error => {
-                  console.error('Error adding Task:', error);
-                });
-        }
-  }
-
-  UpdateTask(task: Task,okrId: number, userId: number): void {
-    this.taskService.UpdateTask(task,okrId,userId).subscribe((data: Task) => {
-      window.location.reload();
-    }, error => {
-      console.error('Error updating Task:', error);
+  AddTask(task: Task, okrId: number, userId: number) {
+  if (!this.isTaskTitleUnique(task.taskTitle)) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Duplicate title',
+      text: 'This task already exists (case not taken into account).',
+      timer: 99999,
+      timerProgressBar: true,
+      showConfirmButton: false
     });
+    return; // On sort pour éviter la suite
   }
+
+  this.taskService.AddTask(task, okrId, userId).pipe(
+    //switchMap(() => this.auth.GetEmailByUserId(userId)),
+    //switchMap(email => this.emailService.sendEmail(email, 'New Task Assigned', `You have been assigned a new task: ${task.taskTitle}`)),
+    catchError(error => {
+      console.error('Error adding task or sending email:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Task added but failed to send email.'
+      });
+      return of(null); // Continue le flux même en cas d'erreur
+    })
+  ).subscribe(() => {
+    Swal.fire({
+      icon: 'success',
+      title: 'Task Added',
+      text: 'Task added successfully and email sent!'
+    });
+    //fermer le pop up de l'ajout de tâche
+    this.closeAddTaskPopop();
+    // Mettre à jour la liste localement sans recharger la page
+    window.location.reload();
+
+    // Réinitialiser le formulaire
+    this.Task = {
+      id: null,
+      taskTitle: '',
+      taskDescription: '',
+      taskState: null,
+      taskStartValue: 0,
+      taskDoneValue: 0,
+      taskWeight: 0,
+      okr: null,
+      user: null
+    };
+  });
+}
+
+  UpdateTask(task: Task, okrId: number, userId: number): void {
+  this.taskService.UpdateTask(task, okrId, userId).subscribe({
+    next: (updatedTask: Task) => {
+      // Rappeler le ML service pour recalculer les probabilités
+      this.mlService.getTaskProbabilities({
+        taskWeight: updatedTask.taskWeight,
+        taskStartValue: updatedTask.taskStartValue,
+        taskDoneValue: updatedTask.taskDoneValue
+      }).subscribe({
+        next: (proba: TaskProbabilities) => {
+          updatedTask.proba_REACHED = proba.proba_REACHED;
+          updatedTask.proba_INPROGRESS = proba.proba_INPROGRESS;
+          updatedTask.proba_UNREACHED = proba.proba_UNREACHED;
+
+          // Mettre à jour la tâche dans la liste locale
+          const index = this.TasksList.findIndex(t => t.id === updatedTask.id);
+          if (index !== -1) this.TasksList[index] = updatedTask;
+
+          // Puis recharger la page si vraiment nécessaire
+          window.location.reload();
+        },
+        error: err => {
+          console.error('Erreur ML:', err);
+          window.location.reload(); // au moins recharger même si ML échoue
+        }
+      });
+    },
+    error: err => console.error('Error updating Task:', err)
+  });
+}
+
 
   closeUpdateTaskPopup(): void {
     this.UpdateTaskPopup = false;
@@ -178,6 +299,7 @@ constructor(private taskService: TaskService, private auth: Auth,private okrServ
 
   openAddTaskPopop(): void {
     this.AddTaskPopup = true;
+    this.Task.taskState = Status.UNREACHED;
   }
 
   closeAddTaskPopop(): void {
@@ -223,9 +345,16 @@ filteredTasks(tasks: any[], search: string): any[] {
   );
 }
 
-
-
-
+downloadCsv() {
+  this.exportSrv.downloadTasksCsv().subscribe(blob => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tasks-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
 
 
 }

@@ -35,6 +35,7 @@ selecteddepartmentid: number = null;
 objective : Objective = new Objective (null,'','',Status.UNREACHED,null,null); // Assuming Status is an enum or class with predefined values0,0);
 selectedobjectiveid : number = null;
 
+authService=this.auth;
 
 Okr: Okr = {
   id: null,
@@ -52,7 +53,7 @@ p:any;
 
 
 constructor(private okrService: OkrService,
-  private auth: Auth,
+  public auth: Auth,
   private departmentService: DepartmentService,
   private objectiveService:ObjectiveService
 ) {}
@@ -208,13 +209,42 @@ getStarClass(index: number, weight: number): string {
       };
     }
 
-  DeleteOkr(okr: Okr) {
+
+
+DeleteOkr(okr: Okr) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "This action will permanently delete this OKR.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.okrService.DeleteOkr(okr).subscribe(() => {
-        window.location.reload();
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted !',
+          text: 'The OKR has been successfully deleted.',
+          timer: 2000,
+          showConfirmButton: false
+        }).then(() => {
+          this.OkrsList = this.OkrsList.filter(item => item.id !== okr.id); //window.location.reload();
+        });
       }, error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while deleting the OKR.',
+        });
         console.error('Error deleting okr:', error);
       });
     }
+  });
+}
+
 
 }
 

@@ -10,6 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Chat } from './demo/chat/chat';
 
 
 
@@ -48,8 +49,11 @@ const routes: Routes = [
         loadComponent: () => import('./demo/photoeditprofile/photoeditprofile').then((c) => c.Photoeditprofile)
       },
       {
-        path: 'color',
-        loadComponent: () => import('./demo/elements/element-color/element-color.component')
+        path: 'employeetasks',
+        loadComponent: () => import('./demo/employeetasks/employeetasks').then((c) => c.Employeetasks)
+      },
+      {
+        path: 'chat/:userId', component: Chat
       },
       {
         path: 'sample-page',

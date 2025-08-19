@@ -1,0 +1,4 @@
+﻿taskWeight,taskStartValue,taskDoneValue,taskState,userId,okrId
+4,100,110,UNREACHED,81,46
+2,10,15,UNREACHED,81,46
+3,10,150,UNREACHED,81,46

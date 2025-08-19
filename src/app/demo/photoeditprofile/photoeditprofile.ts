@@ -25,7 +25,8 @@ departmentName: string = '';
 
 image : Image = new Image();
 
-myprofileuser: User = new User(null, '', '', '', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN,this.department,this.image);
+myprofileuser: User = new User(null, '', '', '','', '', Role.EMPLOYEE || Role.MANAGER || Role.ADMIN,this.department,this.image);
+myprofileuserEmail: string = '';
 
 images: Image[] = [];
 
@@ -37,7 +38,6 @@ imagePreview: string | ArrayBuffer | null = null;
 constructor(private departmentService : DepartmentService ,
   private authService: Auth,
   private imageService : ImageService,
-  private router : Router
 ) {}
 
 
@@ -48,10 +48,23 @@ constructor(private departmentService : DepartmentService ,
     this.myprofileuser.lastname = this.authService.lastname;
     this.myprofileuser.username= this.authService.username;
     this.myprofileuser.role = this.authService.UserRole;
+    this.getEmailByUserId();
     this.GetDepartmentNameByUserId();
     this.GetImageIdByUserId();
     this.fetchImages();
   }
+
+getEmailByUserId() {
+  this.authService.GetEmailByUserId(this.authService.userId).subscribe({
+    next: (email) => {
+      this.myprofileuserEmail = email;
+    },
+
+    error: (err) => {
+      console.error('Erreur lors de la récupération de l\'email :', err);
+    }
+  });
+}
 
 //affihcer Image Utilisateur
     getUserImage(user: User): Image | null {

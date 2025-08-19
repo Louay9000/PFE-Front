@@ -31,7 +31,12 @@ UpdateObjective(objective: Objective) {
 }
 
 DeleteObjective(objective : Objective) {
-  return this.http.delete(`${this.baseUrl}/objectives/${objective.id}`);  }
+  return this.http.delete(`${this.baseUrl}/objectives/${objective.id}`);
+}
+
+getObjectivesCountByStatus() {
+  return this.http.get(`${this.baseUrl}/objectives/stats/status`);
+}
 
 
 }
