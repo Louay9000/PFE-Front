@@ -139,7 +139,7 @@ GetDepartmentNameByUserId() {
     this.departmentName = deptName;
     },
     error: (err) => {
-    console.error('Erreur lors de l’appel au backend :', err);
+    
     this.departmentName = 'No Department assigned Due to Admin Role'
     }
     });

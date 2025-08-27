@@ -3,8 +3,8 @@
 
   <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="text-primary">📊 Key Indicators Management</h1>
-    <button type="button" class="btn btn-outline-info" (click)="openAddOkrPopup()">
+    <h1 class="text-primary">📊 Key Indicators</h1>
+    <button *ngIf="auth.isAdmin()" type="button" class="btn btn-outline-info" (click)="openAddOkrPopup()">
       <i class="bi bi-plus-circle me-2"></i>
     </button>
   </div>
@@ -53,7 +53,7 @@
       </div>
 
       <div class="mt-2 mt-md-0">
-        <button *ngIf="auth.isAdmin()" class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateOkrPopup(okr)">
+        <button *ngIf="auth.isAdmin() || auth.isManager()" class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateOkrPopup(okr)">
           <i class="bi bi-pencil"></i>
         </button>
         <button *ngIf="auth.isAdmin()" class="btn btn-outline-danger btn-sm" (click)="DeleteOkr(okr)">
@@ -104,7 +104,7 @@
 
     <div><label class="form-label">Select Department</label>
         <select class="form-select" [value]="selecteddepartmentid" [(ngModel)]="selecteddepartmentid" name="department" required>
-        <option *ngFor="let dept of DepartmentsWithoutOkr" [ngValue]="dept.id">{{ dept.departmentName }}</option>
+        <option *ngFor="let dept of DepartmentsList" [ngValue]="dept.id">{{ dept.departmentName }}</option>
         </select>
     </div>
 
@@ -167,13 +167,13 @@
     </div>
 
     <div><label class="form-label">Select Department</label>
-        <select class="form-select" [(ngModel)]="selecteddepartmentid" name="department" required>
+        <select class="form-select" [(ngModel)]="selecteddepartmentid" name="department" required disabled>
         <option *ngFor="let dept of DepartmentsList" [ngValue]="dept.id">{{ dept.departmentName }}</option>
         </select>
     </div>
 
     <div><label class="form-label">Select Objective</label>
-        <select class="form-select" [(ngModel)]="selectedobjectiveid" name="objective" required>
+        <select class="form-select" [(ngModel)]="selectedobjectiveid" name="objective" required disabled>
         <option *ngFor="let obj of ObjectivesList" [ngValue]="obj.id">{{ obj.objectiveTitle }}</option>
         </select>
     </div>

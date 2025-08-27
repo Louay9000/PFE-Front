@@ -4,7 +4,7 @@
   padding: 15px;
   font-size: 14px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #8E24AA, #CE93D8); /* Dégradé violet */
+  background: linear-gradient(135deg, #2424aa, #CE93D8); /* Dégradé violet */
   color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
@@ -60,4 +60,29 @@
   font-family: 'Arial', sans-serif;
   text-transform: uppercase;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+/* Badge élégant autour de l'icône */
+.profile-alert {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff4b2b, #ff416c); /* dégradé rouge/rose */
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 0 8px rgba(255, 65, 108, 0.6);
+  animation: bounceAlert 1.5s infinite;
+}
+
+/* Animation rebond élégante */
+@keyframes bounceAlert {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
 }

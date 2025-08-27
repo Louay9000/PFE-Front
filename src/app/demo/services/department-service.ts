@@ -41,11 +41,11 @@ GetDepartmentsWithoutOkr(): Observable<Department[]> {
 }
 
 GetDepartmentNameByUserId(userId: number): Observable<string> {
-  return this.http.get(`${this.baseUrl}/${userId}/department-name`, { responseType: 'text' });
+  return this.http.get(`${this.baseUrl}/users/${userId}/department-name`, { responseType: 'text' });
 }
 
 GetDepartmentIdByUserId(userId: number): Observable<number> {
-  return this.http.get<number>(`${this.baseUrl}/${userId}/department-id`);
+  return this.http.get<number>(`${this.baseUrl}/users/${userId}/department-id`);
 }
 
 

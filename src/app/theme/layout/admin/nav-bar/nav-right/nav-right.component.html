@@ -181,15 +181,17 @@
             </h4>
 
             <ng-scrollbar style="height: calc(100vh - 280px)" visibility="hover">
-              <a [routerLink]="['/photoeditprofile']" class="dropdown-item">
-                <i class="ti ti-settings"></i>
-                <span>Account Profile</span>
-                <i
-                *ngIf="!getUserImage(myprofileuser)"
-                class="ti ti-exclamation-circle text-danger ms-2"
-                title="Image de profil manquante"
-                ></i>
+              <a [routerLink]="['/photoeditprofile']" class="dropdown-item d-flex align-items-center">
+              <i class="ti ti-settings me-2"></i>
+              <span>Account Profile</span>
+
+              <!-- Badge d'alerte si pas d'image -->
+              <span *ngIf="!getUserImage(myprofileuser)" class="profile-alert" title="Image de profil manquante">
+              <i class="ti ti-exclamation-circle"></i>
+              </span>
               </a>
+
+
               <a *ngIf="myprofileuser.role === 'EMPLOYEE'" [routerLink]="['/employeetasks']"
                 class="dropdown-item">
                 <i class="ti ti-clipboard-copy"></i>

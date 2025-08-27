@@ -1,0 +1,37 @@
+<div class="meeting-header-container">
+  <div class="meeting-icon">
+    🫂
+  </div>
+  <h1>Online Meetings</h1>
+</div>
+
+
+  <!-- Formulaire création réunion -->
+  <div class="card p-3 mb-5 create-meeting-card">
+    <input type="text" class="form-control mb-2" placeholder="Title" [(ngModel)]="newMeeting.title">
+    <textarea class="form-control mb-2" placeholder="Description" [(ngModel)]="newMeeting.description"></textarea>
+    <select class="form-select mb-2" [(ngModel)]="newMeeting.platform">
+      <option value="GOOGLE_MEET">Google Meet</option>
+      <option value="MICROSOFT_TEAMS">Teams</option>
+    </select>
+    <input type="datetime-local" class="form-control mb-2" [(ngModel)]="newMeeting.startTime">
+    <input type="datetime-local" class="form-control mb-2" [(ngModel)]="newMeeting.endTime">
+    <button class="btn btn-primary mt-2 w-100" (click)="createMeeting()">Create Meeting</button>
+  </div>
+
+  <!-- Timeline des réunions -->
+  <div class="meeting-timeline">
+    <div class="timeline-line"></div>
+    <div class="meeting-card" *ngFor="let meeting of meetings">
+      <div class="meeting-time">{{meeting.startTime | date:'short'}} - {{meeting.endTime | date:'short'}}</div>
+      <div class="meeting-content">
+        <div class="meeting-header">
+          <h6>{{meeting.title}}</h6>
+        </div>
+        <p>{{meeting.description}}</p>
+        <a [href]="meeting.link" target="_blank" class="btn btn-success btn-sm">Join</a>
+        <button class="btn btn-danger btn-sm" (click)="DeleteMeeting(meeting.id)">Delete</button>
+      </div>
+    </div>
+  </div>
+

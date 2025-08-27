@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestRegressor
 import joblib
 
 # Charger le dataset
-df = pd.read_csv("tasksDuration.csv")
+df = pd.read_csv("taskssDuration.csv")
 
 # Limiter taskDoneValue pour qu'il soit réaliste (done >= start, max start+10)
 df['taskDoneValue'] = np.clip(df['taskDoneValue'], df['taskStartValue'], df['taskStartValue'] + 10)

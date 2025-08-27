@@ -17,13 +17,13 @@ export interface NavigationItem {
 
 export const NavigationItems: NavigationItem[] = [
   {
-    id: 'dashboard',
-    title: 'Dashboard',
+    id: 'overview',
+    title: 'Overview',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'ti ti-dashboard',
     children: [
       {
-        id: 'default',
+        id: 'home',
         title: 'Home',
         type: 'item',
         classes: 'nav-item',
@@ -34,10 +34,11 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
-    id: 'elements',
-    title: 'Elements',
+    id: 'management',
+    title: 'Management',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'ti ti-settings',
+
     children: [
       {
         id: 'users',
@@ -46,38 +47,30 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/users',
         icon: 'ti ti-user',
-        role: ['ADMIN','MANAGER'],
+        role: ['ADMIN','MANAGER','EMPLOYEE'],
       },
       {
-        id: 'tabler',
-        title: 'Tabler',
-        type: 'item',
-        classes: 'nav-item',
-        url: 'https://tabler-icons.io/',
-        icon: 'ti ti-plant-2',
-        target: true,
-        external: true
-      },
-      {id: 'Departments',
+        id: 'departments',
         title: 'Departments',
         type: 'item',
         classes: 'nav-item',
         url: '/departments',
-        icon: 'ti ti-article',
+        icon: 'ti ti-building-warehouse',
         external: true,
         role: ['ADMIN']
       },
-        {
-        id: 'OKR',
-        title: 'OKR',
+      {
+        id: 'okrs',
+        title: 'Okrs',
         type: 'item',
         classes: 'nav-item',
         url: '/okrs',
-        icon: 'ti ti-assembly',
+        icon: 'ti ti-target',
         external: true,
-        role: ['ADMIN']},
-
-        {id: 'Tasks',
+        role: ['ADMIN','MANAGER']
+      },
+      {
+        id: 'tasks',
         title: 'Tasks',
         type: 'item',
         classes: 'nav-item',
@@ -85,32 +78,43 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ti ti-clipboard-list',
         external: true,
         role: ['ADMIN','MANAGER']
-        }
+      },
+      {
+        id: 'Your Tasks',
+        title: 'Your Tasks',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/employeetasks',
+        icon: 'ti ti-clipboard-list',
+        role: ['EMPLOYEE']
+
+      },
     ]
   },
   {
     id: 'communication',
     title: 'Communication',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'ti ti-message-circle',
     children: [
       {
-        id: 'Chat',
+        id: 'chat',
         title: 'Chat',
         type: 'item',
         classes: 'nav-item',
-        url: '/chat/:userId',
+        url: '/chat',
         icon: 'ti ti-brand-hipchat'
       },
       {
-        id: 'Reunions',
-        title: 'Reunions',
+        id: 'meetings',
+        title: 'Meetings',
         type: 'item',
         classes: 'nav-item',
-        url: '/authentication/register',
-        icon: 'ti ti-calendar-stats'
+        url: '/meetings',
+        icon: 'ti ti-calendar-event',
+        role: ['MANAGER']
       }
     ]
   }
-
 ];
+

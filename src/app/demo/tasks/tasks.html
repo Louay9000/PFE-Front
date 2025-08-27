@@ -2,7 +2,7 @@
 <div class="container py-4">
 
   <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="text-primary fw-bold">📋 Task Management</h1>
+  <h1 class="text-primary fw-bold">📋 Tasks </h1>
 
   <div class="d-flex gap-2">
     <button *ngIf="Auth?.isManager()"
@@ -72,7 +72,7 @@
           <th>Assigned User</th>
 
           <th *ngIf="Auth?.isManager()" >Actions</th>
-          <th>ML Probabilities</th>
+          <th>Probabilities</th>
         </tr>
       </thead>
       <tbody *ngIf="searchText.trim() === '' && TasksList.length > 0; else noTasksOrSearch ">
@@ -116,7 +116,7 @@
           </td>
 
 
-          <td class="text-center">
+          <td *ngIf="Auth?.isManager()" class="text-center">
             <button *ngIf="Auth?.isManager()" class="btn btn-outline-primary btn-sm me-2" (click)="openUpdateTaskPopup(task)">✏️</button>
             <button *ngIf="Auth?.isManager()" class="btn btn-outline-danger btn-sm" (click)="DeleteTask(task)">🗑️</button>
           </td>

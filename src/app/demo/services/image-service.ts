@@ -34,7 +34,7 @@ getAllImages(): Observable<Image[]> {
 }
 
 getImageIdByUserId(userId: number): Observable<number> {
-  return this.httpclient.get<number>(`${this.imageURL}${userId}/image-id`);
+  return this.httpclient.get<number>(`${this.imageURL}users/${userId}/image-id`);
 }
 
 }

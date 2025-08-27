@@ -110,7 +110,7 @@ constructor(private taskService: TaskService,
           taskDoneValue: task.taskDoneValue
         }).subscribe({
           next: (proba: TaskProbabilities) => {
-            console.log('Proba ML:', proba);
+
             task.proba_REACHED = proba.proba_REACHED;
             task.proba_INPROGRESS = proba.proba_INPROGRESS;
             task.proba_UNREACHED = proba.proba_UNREACHED;
@@ -208,6 +208,7 @@ constructor(private taskService: TaskService,
   this.taskService.AddTask(task, okrId, userId).pipe(
     //switchMap(() => this.auth.GetEmailByUserId(userId)),
     //switchMap(email => this.emailService.sendEmail(email, 'New Task Assigned', `You have been assigned a new task: ${task.taskTitle}`)),
+
     catchError(error => {
       console.error('Error adding task or sending email:', error);
       Swal.fire({
@@ -300,6 +301,7 @@ constructor(private taskService: TaskService,
   openAddTaskPopop(): void {
     this.AddTaskPopup = true;
     this.Task.taskState = Status.UNREACHED;
+
   }
 
   closeAddTaskPopop(): void {

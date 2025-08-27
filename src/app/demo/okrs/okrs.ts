@@ -92,7 +92,6 @@ getDepartmentsWithoutOkr() {
     this.getAllOkrs();
     this.getAllDepartments();
     this.getAllObjectives();
-    this.getDepartmentsWithoutOkr();
 
   }
 
@@ -108,9 +107,39 @@ getStarClass(index: number, weight: number): string {
   return index < weight ? 'bi-star-fill text-warning' : 'bi-star text-secondary';
 }
 
+getAllOkrs(){
+  if (this.auth.UserRole === 'MANAGER') {
+    // Si connecté en tant que manager -> filtrer par département
+    this.departmentService.GetDepartmentIdByUserId(this.auth.userId).subscribe(
+      (deptId: number) => {
+        this.getOkrsByDepartment(deptId);
+      },
+      error => {
+        console.error('Erreur récupération departmentId du user', error);
+      }
+    );
+  } else {
+    // Si admin ou autre rôle -> voir tous les OKRs
+    this.getAllOkrsAdmin();
+  }
+}
 
 
-  getAllOkrs() {
+getOkrsByDepartment(deptId: number) {
+  this.okrService.getAllokrs().subscribe(
+    (data: Okr[]) => {
+      this.OkrsList = data.filter(okr => okr.department?.id === deptId);
+    },
+    error => {
+      console.error('Erreur récupération okrs par département', error);
+    }
+  );
+}
+
+
+
+
+  getAllOkrsAdmin() {
     this.okrService.getAllokrs().subscribe((data: Okr[]) => {
       this.OkrsList = data;
     }, error => {
@@ -125,24 +154,32 @@ getStarClass(index: number, weight: number): string {
   }
 
 
-  AddOkr(okr: Okr,departmentId:number,objectiveId : number) {
+  AddOkr(okr: Okr, departmentId: number, objectiveId: number) {
+  if (!this.isOkrTitleUnique(okr.keyindicatorTitle)) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Duplicate title',
+      text: 'This key indicator title already exists (case not taken into account).',
+      timer: 5000,
+      timerProgressBar: true,
+      showConfirmButton: false
+    });
+  } else {
+    this.okrService.AddOkr(okr, departmentId, objectiveId).subscribe(
+      (data: Okr) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'OKR Added',
+          text: 'The OKR was added successfully!',
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false
+        });
 
-    if (!this.isOkrTitleUnique(okr.keyindicatorTitle)) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Duplicate title',
-        text: 'This key indicator title already exists (case not taken into account).',
-        timer: 99999,
-        timerProgressBar: true,
-        showConfirmButton: false
-      });
-
-    }else{
-  this.okrService.AddOkr(okr,departmentId,objectiveId).subscribe((data: Okr) => {
-
+        // Recharge la page (à éviter si possible, préfère recharger la liste dynamiquement)
         window.location.reload();
 
-        okr.keyindicatorTitle = ''; // Clear the input field after adding
+        // Réinitialisation du formulaire
         this.Okr = {
           id: null,
           keyindicatorTitle: '',
@@ -151,13 +188,22 @@ getStarClass(index: number, weight: number): string {
           reachedValue: 0,
           okrWeight: 0,
           okrProgression: 0,
-          department:null,
-          objective:null
+          department: null,
+          objective: null
         };
-      }, error => {
+      },
+      error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Department already has an OKR.',
+        });
         console.error('Error adding okr:', error);
-      });
-    }}
+      }
+    );
+  }
+}
+
 
   UpdateOkr(okr: Okr, departmentId: number, objectiveId: number) {
 

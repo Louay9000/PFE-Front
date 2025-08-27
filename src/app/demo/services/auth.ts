@@ -15,8 +15,8 @@ export class Auth {
 
   }
 
-private baseUrl = 'http://localhost:8085';
-
+private baseUrl = 'http://localhost:8085/users';
+private Url = 'http://localhost:8085/tasks';
 
   isAuthenticated : boolean=false;
   username:any;
@@ -120,7 +120,7 @@ updateUserDTO(user: User): Observable<User> {
 return this.http.put<User>(`${this.baseUrl}/users/${user.id}`, user);
 }
 GetTaskByUserId(id: number) {
-  return this.http.get(`${this.baseUrl}/tasks/${id}`);
+  return this.http.get(`${this.Url}/${id}`);
 }
 GetEmailByUserId(userId: number):Observable<string> {
   return this.http.get(`${this.baseUrl}/${userId}/email`,{ responseType: 'text' });

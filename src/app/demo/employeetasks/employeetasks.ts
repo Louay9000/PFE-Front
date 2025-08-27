@@ -60,7 +60,7 @@ task: Task = {
   ngOnInit() {
     this.auth.loadProfile();
     this.getTasksByUserId(this.auth.userId);
-  
+
   };
 
 loadTasksWithDurations() {

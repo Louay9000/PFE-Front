@@ -16,6 +16,7 @@ import { TaskService } from '../services/task-service';
 import { Okr } from '../models/Okr';
 import { OkrService } from '../services/okr-service';
 import { Emailservice } from '../services/emailservice';
+import { ChatService } from '../services/chat-service';
 
 
 
@@ -28,6 +29,7 @@ import { Emailservice } from '../services/emailservice';
 export class Users implements OnInit {
 ListDeparments: Department[] = [];
 TasksList:Task[] = [];
+OkrsList: Okr[] = [];
 
 UpdateUserPopup: boolean = false;
 AddUserPopup: boolean = false;
@@ -68,17 +70,26 @@ selectedUserIdInTaskPopUp: number;
 selecteddepartmentIdInTaskPopUp: number ;
 
 p:any;
+x:any;
 
 Auth = this.authService;
 
+messages: any[] = [];
+connected = false;
+messageContent = '';
+chatForm:boolean = false;
+selectedUserToSendMessage: User = new User(0, '', '', '','', '',
+   Role.EMPLOYEE || Role.MANAGER || Role.ADMIN
+   ,this.department
+   ,this.image); // Reset selected user
 
   constructor(private departmentService : DepartmentService ,
     private authService: Auth,
     private imageService: ImageService,
     private taskService: TaskService,
     private okrService: OkrService,
-    private emailService:Emailservice) {}
-
+    private emailService:Emailservice,
+  private chatService: ChatService) {}
 
   ngOnInit() {
     this.authService.loadProfile();
@@ -86,6 +97,14 @@ Auth = this.authService;
     this.getAllDepartments();
     this.fetchImages();
   }
+
+GetOkrsBydepartmentId(){
+  this.okrService.getOkrsByDepartmentId(this.selecteddepartmentid).subscribe((data: Okr[]) => {
+    this.OkrsList = data;
+  }, error => {
+    console.error('Error fetching OKRs:', error);
+  });
+}
 
 getAllDepartments() {
     this.departmentService.getAllDepartments().subscribe((data: Department[]) => {
@@ -114,15 +133,11 @@ getAllDepartments() {
       return null;
     }
 
-
-
-
   getAllUsers() {
   this.authService.getAllUsers(this.authService.UserRole, this.authService.userId)
     .subscribe(
       (data: User[]) => {
         this.UsersList = data.filter(user => user.id !== this.authService.userId);
-
       },
       (error) => {
         console.error('Error fetching users:', error);
@@ -137,16 +152,12 @@ getAllDepartments() {
     );
 }
 
-
-
     compareDepartments(d1: Department, d2: Department): boolean {
   return d1 && d2 ? d1.id === d2.id : d1 === d2;
 }
 
-
     closeUpdateUserPopup():void {
     this.UpdateUserPopup = false;
-
     }
 
   openUpdateUseropup(user:User): void {
@@ -169,9 +180,6 @@ isUsernameUnique(Username: string): boolean {
     u => u.username.trim().toUpperCase() === Username.trim().toUpperCase()
   );
 }
-
-
-
 
   AddUser(user: User, departmentId: number) {
   this.selecteddepartmentid = departmentId;
@@ -198,15 +206,11 @@ isUsernameUnique(Username: string): boolean {
       }).then(() => {
         window.location.reload();
       });
-
       // ✅ Réinitialiser le formulaire
       this.User = new User(null, '', '', '', '','', Role.EMPLOYEE, this.department,this.image);
-
-
     },
-
     error: (error) => {
-  const msg = error.error || 'Une erreur est survenue.';
+    const msg = error.error || 'Une erreur est survenue.';
 
   if (msg.includes('manager')) {
     Swal.fire({
@@ -233,7 +237,6 @@ isUsernameUnique(Username: string): boolean {
       showConfirmButton: false
     });
   }
-
   console.error('Error adding user:', error);
 }
   });
@@ -368,15 +371,18 @@ openAssignTaskPopup(departmentId : number , userId: number): void {
 this.selectedUserIdInTaskPopUp = userId;
 this.selecteddepartmentIdInTaskPopUp = departmentId;
 this.AssignTaskPopup = true;
+this.selecteddepartmentid=departmentId;
+this.GetOkrsBydepartmentId();
+console.log(this.selecteddepartmentid);
 }
 closeAssignTaskPopup(): void {
   this.AssignTaskPopup = false;
   this.User = new User(null, '', '', '','', '', Role.EMPLOYEE, this.department,this.image); // Reset user form
 }
 
-assignTaskToUser(task: Task, departmentId: number, userId: number): void {
-  console.log(departmentId, userId);
-  this.taskService.createTaskAndAssign(task, departmentId, userId).subscribe({
+assignTaskToUser(task: Task, okrId: number, userId: number): void {
+  console.log(okrId, userId);
+  this.taskService.AddTask(task, okrId, userId).subscribe({
     next: (data) => {
       Swal.fire({
         icon: 'success',
@@ -416,6 +422,45 @@ assignTaskToUser(task: Task, departmentId: number, userId: number): void {
   });
 }
 
+//chat
+  connect() {
+    if (this.authService.username.trim()) {
+      this.chatService.connect(this.authService.username, (msg) => {
+        this.messages.push(msg);
+      });
+      this.connected = true;
+    }
+  }
+
+  sendMessage(receiver: User) {
+    const senderId = this.authService.userId;
+    const receiverId = receiver.id;
+    const content = this.messageContent;
+    // 1️⃣ Ajouter en BDD
+    this.chatService.addMessage(senderId, receiverId, content).subscribe((savedMsg) => {
+    //  this.messages.push(savedMsg); // update affichage
+      // 2️⃣ Envoyer temps réel
+      this.chatService.sendMessage(savedMsg);
+    });
+    this.messageContent = ''; // clear input
+  }
+
+  openMessagesWithUser(user: User) {
+    this.chatForm = true;
+    this.selectedUserToSendMessage = user;
+    this.loadConversation(user);
+    this.connect();
+  }
+  closeMessagesWithUser() {
+    this.chatForm = false;
+  }
+  loadConversation(user: User) {
+    this.chatService.getConversation(this.authService.userId, user.id)
+      .subscribe(data => {
+        this.messages = data;
+        console.log(data);
+      });
+  }
 
 }
 

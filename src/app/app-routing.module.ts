@@ -53,7 +53,12 @@ const routes: Routes = [
         loadComponent: () => import('./demo/employeetasks/employeetasks').then((c) => c.Employeetasks)
       },
       {
-        path: 'chat/:userId', component: Chat
+        path: 'meetings',
+        loadComponent: () => import('./demo/meetings/meetings').then((c) => c.Meetings)
+      },
+      {
+        path: 'chat',
+        component: Chat
       },
       {
         path: 'sample-page',

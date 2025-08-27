@@ -5,7 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 import pickle
 
 # Charger les données
-df = pd.read_csv("tasks.csv")
+df = pd.read_csv("taskss.csv")
 
 # Garder seulement les colonnes utiles
 X = df[['taskWeight', 'taskStartValue', 'taskDoneValue']]

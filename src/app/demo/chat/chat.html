@@ -1,1 +1,20 @@
-<p>chat works!</p>
+<div class="chat-container">
+  <h2>Chat App</h2>
+
+
+
+  <!-- Chat box -->
+  <div *ngIf="connected">
+    <h3>Welcome {{username}}</h3>
+
+    <input type="text" placeholder="Send to (username)" [(ngModel)]="toUser" />
+    <input type="text" placeholder="Type your message" [(ngModel)]="messageContent" />
+    <button (click)="sendMessage()">Send</button>
+
+    <div class="messages">
+      <div *ngFor="let msg of messages">
+        <b>{{msg.from}}</b> → <b>{{msg.to}}</b>: {{msg.content}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,7 +3,7 @@
 
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="text-primary">	🏢 Departments Management</h1>
+    <h1 class="text-primary">	🏢 Departments</h1>
     <button type="button" class="btn btn-outline-info" (click)="openAddDepartmentPopup()">
       <i class="bi bi-plus-circle me-2"></i>
     </button>
@@ -159,26 +159,39 @@
       <!-- Body -->
       <div class="modal-body">
         <p class="mb-3">Select an employee to assign as manager for the department:</p>
-        <div class="row">
-          <div class="col-md-6 mb-3" *ngFor="let employee of ListEmployeesByDepartment">
-            <div class="card border-warning shadow-sm h-100">
-              <div class="card-body">
-                <h5 class="card-title text-warning">
-                  <i class="bi bi-person-fill me-2"></i>{{ employee.firstname }} {{ employee.lastname }}
-                </h5>
-                <p class="card-text text-muted mb-1">
-                  <i class="bi bi-envelope me-2"></i>{{ employee.username }}
-                </p>
-                <div class="d-flex justify-content-end mt-3">
-                  <button class="btn btn-primary" type="submit" (click)="assignEmployeeAsManager(employee)">
-                  <i class="bi bi-person-plus-fill me-1"></i>
-                  </button>
 
+        <!-- Si la liste est vide -->
+        <div *ngIf="!ListEmployeesByDepartment || ListEmployeesByDepartment.length === 0; else employeesList"
+             class="text-center py-5">
+          <div class="d-flex flex-column align-items-center">
+            <i class="bi bi-people text-secondary" style="font-size: 4rem;"></i>
+            <h5 class="mt-3 text-muted">No employees available</h5>
+            <p class="text-muted">This department does not have any employees to assign as manager.</p>
+          </div>
+        </div>
+
+        <!-- Si la liste contient des employés -->
+        <ng-template #employeesList>
+          <div class="row">
+            <div class="col-md-6 mb-3" *ngFor="let employee of ListEmployeesByDepartment">
+              <div class="card border-warning shadow-sm h-100">
+                <div class="card-body">
+                  <h5 class="card-title text-warning">
+                    <i class="bi bi-person-fill me-2"></i>{{ employee.firstname }} {{ employee.lastname }}
+                  </h5>
+                  <p class="card-text text-muted mb-1">
+                    <i class="bi bi-envelope me-2"></i>{{ employee.username }}
+                  </p>
+                  <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-primary" type="submit" (click)="assignEmployeeAsManager(employee)">
+                      <i class="bi bi-person-plus-fill me-1"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </ng-template>
       </div>
 
       <!-- Footer -->
@@ -189,6 +202,7 @@
     </div>
   </div>
 </div>
+
 
 
 <!-- End of Open Employees by Department Popup -->
