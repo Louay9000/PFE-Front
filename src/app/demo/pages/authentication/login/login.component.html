@@ -53,14 +53,14 @@
             <!-- ✅ Modal d'erreur -->
 <ng-template #errorModal let-modal>
   <div class="modal-header bg-danger text-white">
-    <h5 class="modal-title">Erreur de Connexion</h5>
+    <h5 class="modal-title">Login Error</h5>
     <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body text-center">
     <span>Username or Password are Incorrect . Please Try again !</span>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">Fermer</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
   </div>
 </ng-template>
           </div>

@@ -212,15 +212,15 @@
 /* chat css */
 /* Chat btn */
 .chatBtn {
-  width: 55px;
-  height: 55px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   border: none;
   background-color: #FFE53B;
-  background-image: linear-gradient(147deg, #FFE53B, #FF2525,#FFE53B);
+  background-image: linear-gradient(147deg, #FFE53B, #a5a1a13b,#FFE53B);
   cursor: pointer;
   padding-top: 3px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.164);
@@ -274,4 +274,256 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease-in-out;
+}
+/* Conteneur principal du chat */
+.chat-window {
+  width: 350px;
+  height: 500px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: fixed; /* au lieu de absolute pour flotter */
+  bottom: 20px;   /* position en bas à droite */
+  right: 20px;
+  z-index: 1000;  /* reste au-dessus */
+}
+
+
+/* Bouton fermer */
+.chat-window .btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease-in-out;
+}
+.chat-window .btn-close:hover { color: #f44336; }
+
+/* Zone des messages scrollable */
+.messages-container {
+  flex: 1; /* prend tout l'espace restant */
+  overflow-y: auto; /* scroll vertical si trop de messages */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Messages */
+.message-item {
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 80%;
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.my-message { background-color: #007bff; color: white; align-self: flex-end; }
+.other-message { background-color: #f1f1f1; color: #333; align-self: flex-start; }
+
+/* Zone input */
+.chat-input {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background-color: #fafafa;
+}
+
+.message-input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+.message-input:focus { border-color: #007bff; box-shadow: 0 0 5px rgba(0,123,255,0.3); }
+
+.send-button {
+  padding: 0 16px;
+  border: none;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+.send-button:hover { background-color: #0056b3; }
+
+/* Scrollbar custom */
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+.messages-container::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 3px;
+}
+.messages-container::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+
+/* Style général des modales */
+.modal-content {
+  border-radius: 1.5rem !important;
+  border: none !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.modal-header {
+  border-bottom: none !important;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.modal-header h5 {
+  font-size: 1.4rem;
+}
+
+.modal-footer {
+  border-top: none !important;
+}
+
+/* Boutons modernes */
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-primary,
+.btn-success {
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-outline-secondary:hover {
+  background: #f1f1f1;
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5a0fbf, #1f63e0);
+  transform: scale(1.05);
+}
+
+/* Liste des tâches */
+.list-group-item {
+  border-radius: 12px !important;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.05) !important;
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  transform: translateY(-3px);
+  background: #f9fbff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.list-group-item h5 {
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+/* Assign Task Form */
+form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+form .form-control,
+form .form-select {
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+form .form-control:focus,
+form .form-select:focus {
+  border-color: #2575fc;
+  box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+  outline: none;
+}
+
+form textarea {
+  resize: none;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+/* Icônes dans les boutons */
+.btn i, .btn svg {
+  margin-right: 6px;
+}
+/* État vide (No tasks) */
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f8faff, #ffffff);
+  border: 1px dashed #cfd8dc;
+  color: #6c757d;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: #9e9e9e;
+  margin-bottom: 0.8rem;
+}
+
+.empty-title {
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.empty-text {
+  font-size: 0.95rem;
+  color: #777;
+}
+
+/* Petite animation entrée */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -10,7 +10,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Chat } from './demo/chat/chat';
 
 
 
@@ -55,10 +54,6 @@ const routes: Routes = [
       {
         path: 'meetings',
         loadComponent: () => import('./demo/meetings/meetings').then((c) => c.Meetings)
-      },
-      {
-        path: 'chat',
-        component: Chat
       },
       {
         path: 'sample-page',

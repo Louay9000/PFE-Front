@@ -157,3 +157,62 @@ h5.text-secondary a:hover {
   font-weight: 500;
   transition: all 0.3s ease;
 }
+/* Header rouge moderne */
+.error-header {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Corps centré avec icône */
+.error-body {
+  padding: 30px 20px;
+  font-size: 15px;
+  color: #555;
+}
+
+.error-body p {
+  margin-top: 15px;
+  font-weight: 500;
+}
+
+/* Icône d’erreur animée */
+.error-icon {
+  font-size: 60px;
+  color: #e74c3c;
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Animation "shake" pour icône */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+/* Footer sobre */
+.modal-footer {
+  border-top: none;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+/* Bouton Close modernisé */
+.modal-footer .btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.modal-footer .btn:hover {
+  background: #e74c3c;
+  color: #fff
+}

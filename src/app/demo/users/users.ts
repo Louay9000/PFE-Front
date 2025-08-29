@@ -423,14 +423,23 @@ assignTaskToUser(task: Task, okrId: number, userId: number): void {
 }
 
 //chat
+
   connect() {
-    if (this.authService.username.trim()) {
-      this.chatService.connect(this.authService.username, (msg) => {
+  if (!this.connected) {
+    this.chatService.connect(this.authService.username,(msg) => {
+      // ⚡ Filtrage : afficher seulement si le message est lié au user sélectionné
+      if (
+        this.chatForm &&
+        this.selectedUserToSendMessage &&
+        ((msg.sender.id === this.selectedUserToSendMessage.id && msg.receiver.id === this.authService.userId) ||
+        (msg.receiver.id === this.selectedUserToSendMessage.id && msg.sender.id === this.authService.userId))
+      ) {
         this.messages.push(msg);
-      });
-      this.connected = true;
-    }
+      }
+    });
+    this.connected = true;
   }
+}
 
   sendMessage(receiver: User) {
     const senderId = this.authService.userId;
@@ -445,9 +454,11 @@ assignTaskToUser(task: Task, okrId: number, userId: number): void {
     this.messageContent = ''; // clear input
   }
 
+
   openMessagesWithUser(user: User) {
     this.chatForm = true;
     this.selectedUserToSendMessage = user;
+    console.log("Selected user for chat:", this.selectedUserToSendMessage);
     this.loadConversation(user);
     this.connect();
   }
@@ -460,6 +471,10 @@ assignTaskToUser(task: Task, okrId: number, userId: number): void {
         this.messages = data;
         console.log(data);
       });
+  }
+
+  closeChat() {
+    this.chatForm = false;
   }
 
 }

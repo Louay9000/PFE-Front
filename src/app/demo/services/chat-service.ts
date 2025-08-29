@@ -13,6 +13,7 @@ import { Auth } from './auth';
 export class ChatService implements OnDestroy {
 
   private apiUrl = 'http://localhost:8085';
+  messageContent: any;
 
   constructor(private http: HttpClient,private auth:Auth) {}
   ngOnDestroy(): void {
@@ -21,7 +22,7 @@ export class ChatService implements OnDestroy {
   }  }
   private stompClient: Client | null = null;
 
-  
+
   connect(username: string, onMessage: (msg: ChatMessage) => void) {
     if (this.stompClient?.connected) return; // déjà connecté
     this.stompClient = Stomp.over(() => new SockJS(`${this.apiUrl}/chat-ws`));
@@ -65,4 +66,11 @@ export class ChatService implements OnDestroy {
     return this.http.get<ChatMessage[]>(`${this.apiUrl}/talk/conversation?user1=${user1Id}&user2=${user2Id}`);
   }
 
+
+  getMessagesForUser(userId: number): Observable<ChatMessage[]> {
+    return this.http.get<ChatMessage[]>(`${this.apiUrl}/talk/inbox/${userId}`);
+  }
+
+
+  
 }

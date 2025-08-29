@@ -86,3 +86,208 @@
     transform: scale(1.25);
   }
 }
+.dropdown-notification {
+  width: 350px;
+  max-width: 100%;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+.dropdown-header {
+  background: linear-gradient(90deg, #4e54c8, #8f94fb);
+  color: white;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.notification-list {
+  padding: 0.5rem;
+}
+
+.notification-item {
+  background-color: #f5f6ff;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.notification-item:hover {
+  background-color: #e0e2ff;
+  transform: translateX(3px);
+}
+
+.message-header {
+  margin-bottom: 0.25rem;
+}
+
+.sender {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.message-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.my-message {
+  background-color: #4e54c8;
+  color: white;
+  text-align: right;
+  padding: 8px 12px;
+  border-radius: 15px 15px 0 15px;
+  margin: 4px 0;
+  max-width: 70%;
+  margin-left: auto;
+}
+
+.other-message {
+  background-color: #f1f1f1;
+  color: #333;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 15px 15px 15px 0;
+  margin: 4px 0;
+  max-width: 70%;
+  margin-right: auto;
+}
+
+.message-item {
+  display: block;
+}
+.chat-window {
+  width: 350px;
+  height: 500px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: fixed; /* au lieu de absolute pour flotter */
+  bottom: 20px;   /* position en bas à droite */
+  right: 20px;
+  z-index: 1000;  /* reste au-dessus */
+}
+
+
+/* Bouton fermer */
+.chat-window .btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease-in-out;
+}
+.chat-window .btn-close:hover { color: #f44336; }
+
+/* Zone des messages scrollable */
+.messages-container {
+  flex: 1; /* prend tout l'espace restant */
+  overflow-y: auto; /* scroll vertical si trop de messages */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Messages */
+.message-item {
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 80%;
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.my-message { background-color: #007bff; color: white; align-self: flex-end; }
+.other-message { background-color: #f1f1f1; color: #333; align-self: flex-start; }
+
+/* Zone input */
+.chat-input {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background-color: #fafafa;
+}
+
+.message-input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+.message-input:focus { border-color: #007bff; box-shadow: 0 0 5px rgba(0,123,255,0.3); }
+
+.send-button {
+  padding: 0 16px;
+  border: none;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+.send-button:hover { background-color: #0056b3; }
+
+/* Scrollbar custom */
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+.messages-container::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 3px;
+}
+.messages-container::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+
+/* Animation légère */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-close{
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #000000;
+  transition: 0.3s ease;
+}
+.no-messages {
+  text-align: center;
+  padding: 40px 20px;
+  color: #777;
+  font-size: 15px;
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-messages i {
+  font-size: 32px;
+  color: #4a90e2;
+  margin-bottom: 10px;
+}
+
+
+

@@ -94,18 +94,30 @@
       </div>
   </div>
 
-  <!-- Conversation Form -->
-  <div *ngIf="chatForm" class="chat-window">
-  <div *ngFor="let msg of messages"
-  [ngClass]="{'my-message': msg.sender.id === Auth.userId, 'other-message': msg.sender.id !== Auth.userId}"
-  class="message-item">
-  <strong>{{ msg.sender.firstname }}:</strong> {{ msg.content }}
+<div *ngIf="chatForm" class="chat-window">
+  <button (click)="closeChat()" class="btn-close">&times;</button>
+
+  <!-- Zone des messages avec scroll -->
+  <div class="messages-container">
+    <div *ngFor="let msg of messages"
+        [ngClass]="{'my-message': msg.sender.id === Auth.userId,
+                    'other-message': msg.sender.id !== Auth.userId}"
+        class="message-item">
+      <strong>{{ msg.sender.username }}:</strong> {{ msg.content }}
+    </div>
   </div>
+
+  <!-- Input pour envoyer un message -->
   <div class="chat-input">
-  <input [(ngModel)]="messageContent"  type="text" class="message-input" placeholder="Type your message here">
-  <button (click)="sendMessage(selectedUserToSendMessage)" class="send-button">Send</button>
+    <input [(ngModel)]="messageContent"
+           type="text"
+           class="message-input"
+           placeholder="Type your message here"
+           (keyup.enter)="sendMessage(selectedUserToSendMessage)">
+    <button (click)="sendMessage(selectedUserToSendMessage)" class="send-button">Send</button>
   </div>
-  </div>
+</div>
+
 
 
 
@@ -230,9 +242,14 @@
       </div>
 
       <div class="modal-body">
-        <div *ngIf="TasksList.length === 0" class="text-center text-muted">
-          <p>User doesn't have any tasks.</p>
-        </div>
+        <div *ngIf="TasksList.length === 0" class="empty-state">
+  <div class="empty-icon">
+    <i class="bi bi-clipboard-x"></i>
+  </div>
+  <h5 class="empty-title">No Tasks Found</h5>
+  <p class="empty-text">This user doesn't have any tasks assigned yet.</p>
+</div>
+
 
         <div *ngIf="TasksList.length > 0" class="list-group">
           <div

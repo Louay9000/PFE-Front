@@ -98,14 +98,6 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'ti ti-message-circle',
     children: [
       {
-        id: 'chat',
-        title: 'Chat',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/chat',
-        icon: 'ti ti-brand-hipchat'
-      },
-      {
         id: 'meetings',
         title: 'Meetings',
         type: 'item',
